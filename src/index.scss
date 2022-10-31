@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
 
 :root {
-  color: #BBBBBB; 
-  background: #121212;
+  --main-bg-color: #121212;
+  --main-text-color: #BBBBBB;
+  --light-bg-color: #FFFFFF;
+  --light-text-color: rgba(48, 48, 48, 1);
+  
+  color: var(--main-text-color); 
+  background: var(--main-bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -43,8 +47,4 @@ html {
 ::-webkit-scrollbar-thumb {
   background: rgb(171,171,171);
   -webkit-border-radius: 2ex;
-}
-
-a {
-  text-decoration: inherit;
 }
