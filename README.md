@@ -3,7 +3,7 @@ SMS Chat App with React Typescript and Firebase
 
 ## Cloning branch
 ```shell
-git clone https://github.com/ArJSarmiento/ProxiChat.git
+git clone https://github.com/GDG-Davao-2022-Project/ProxiChat.git
 ```
 
 ## Before making changes in dev-branch
