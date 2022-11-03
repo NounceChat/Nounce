@@ -39,10 +39,14 @@ function Login() {
   
   const requestOTP = (e:any) => {
     e.preventDefault();
-    if (phoneNumber.length < 11) {
+    if (phoneNumber.length < 11 || (phoneNumber.substring(0, 3) !== countryCode && phoneNumber.substring(0, 2) !== "09")) {
       alert("Please enter a valid phone number");
       return;
     }
+
+    if (phoneNumber.substring(0, 2) === "09")
+      setPhoneNumber(countryCode + phoneNumber.substring(2));
+
     generateRecaptcha();
     signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
     .then(confirmationResult => {
