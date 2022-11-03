@@ -33,6 +33,7 @@ function Login() {
         console.log(result.user);
       }).catch((error:any) => {
         console.log(error);
+        alert("Invalid OTP");
       })
     } 
   }
@@ -74,7 +75,7 @@ function Login() {
           {
             expandForm === true ?
               <div>
-                <input type="number" id="otpInput" value={OTP} onChange={verifyOTP} placeholder="Enter your OTP:"/>
+                <input type="number" maxLength={6} id="otpInput" value={OTP} onChange={verifyOTP} placeholder="Enter your OTP:"/>
                 <button type="submit">
                   <p>Verify</p>
                 </button>
