@@ -1,8 +1,10 @@
 import "./Login.module.scss"
 import logo from "../../assets/img/logo.png"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import {auth} from '../../../public/firebase-config';  
 import {RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
+import {useAuthState} from 'react-firebase-hooks/auth';
 
 declare global {
   interface Window {
@@ -16,6 +18,12 @@ function Login() {
   const [phoneNumber, setPhoneNumber] = useState(countryCode);
   const [expandForm, setExpandForm] = useState(false);
   const [OTP, setOTP] = useState("");  
+  const navigate = useNavigate();
+  const [user] = useAuthState(auth);
+  
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user]);
 
   const verifyOTP = (e:any) => {
     let otp = e.target.value;
@@ -39,22 +47,23 @@ function Login() {
   
   const requestOTP = (e:any) => {
     e.preventDefault();
+    let phone = phoneNumber;
     if (phoneNumber.length < 11 || (phoneNumber.substring(0, 3) !== countryCode && phoneNumber.substring(0, 2) !== "09")) {
       alert("Please enter a valid phone number");
       return;
     }
 
-    if (phoneNumber.substring(0, 2) === "09")
-      setPhoneNumber(countryCode + phoneNumber.substring(2));
-
+    if (phoneNumber.substring(0, 2) == "09") phone = countryCode + phoneNumber.substring(2);
+      
     generateRecaptcha();
-    signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+    signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
     .then(confirmationResult => {
       setExpandForm(true);
       window.confirmationResult = confirmationResult;  
     })
     .catch(err => {
       console.error(err);
+      console.log(err.message);
     });
   }
 
