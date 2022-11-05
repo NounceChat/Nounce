@@ -1,0 +1,52 @@
+.mssg-thread{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* align-items: center; */
+
+    width: 50vw;
+    position: relative;
+    margin-bottom: 2vh;
+    border-radius: 20px;
+}
+
+.mssg-thread:hover{
+    background-color: #303030;
+    cursor: pointer;
+}
+
+.avatar{
+    display: flex;
+    width: 30%;
+    align-items: center;
+    justify-content: center;
+    /* position: absolute; */
+}
+
+.avatar img{
+    display: flex;
+    width: 50px;
+    /* position: absolute; */
+}
+
+.name-mssg{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    width: 50vw;
+}
+
+.name{
+    font-weight: 800;
+}
+
+.name-mssg p{
+    line-height: 0.1;
+}
+
+.time{
+    display: flex;
+    justify-content: flex-end;
+    width: 60%;
+
+}

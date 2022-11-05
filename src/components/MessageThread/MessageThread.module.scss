@@ -1,0 +1,36 @@
+.mssg-thread{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 80%;
+    position: relative;
+
+    .avatar{
+        display: flex;
+        width: 10%;
+        position: absolute;
+
+        
+            height: 60px;
+            width: 60px;
+            border-radius: 100px;
+
+        
+    }
+
+    .name-mssg{
+        display: flex;
+        flex-direction: row;
+        width: 30%;
+
+    }
+
+    .time{
+        display: flex;
+        justify-content: flex-end;
+        width: 60%;
+
+    }
+}

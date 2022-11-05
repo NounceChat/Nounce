@@ -1,0 +1,22 @@
+nav{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 55px;
+    box-shadow: 0 0 3px #303030;
+    background-color: rgb(18,18,18);
+    overflow-x: auto;
+    display: flex;
+
+    a{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        min-width: 50px;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+}
