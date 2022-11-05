@@ -2,10 +2,12 @@ import "./Test.module.scss"
 import { useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {auth, db} from '../../../public/firebase-config';  
-import {collection, addDoc} from 'firebase/firestore';
+import {collection, addDoc,  query, where, getDocs} from 'firebase/firestore';
+import {useAuthState} from 'react-firebase-hooks/auth';
 
 function Test() {
     const navigate = useNavigate();
+    const [user] = useAuthState(auth);
     const [text, setText] =  useState("");    
     const logout  = () => {
         if (window.confirm("Are you sure you want to logout?")) {
@@ -13,16 +15,21 @@ function Test() {
             navigate("/login");
         }
     }
-    const submitText = (e:any) => {
+    const submitText = async (e:any) => {
         e.preventDefault();
         if (auth.currentUser) 
             console.log(auth.currentUser.phoneNumber);
         
         try{
-            const docRef = addDoc(collection(db, "batch_messages"), {
-                to: auth.currentUser?.phoneNumber,
-                body: text,
-                createdAt: new Date()
+            const messageRef= collection(db, "phones");
+            const q = query(messageRef, where("optedIn", "==", true)); 
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                addDoc(collection(db, "batch_messages"), {
+                        to: doc.data().number,
+                        body: text,
+                        createdAt: new Date()
+                    });
             });
         }
         catch (e) {
@@ -37,7 +44,7 @@ function Test() {
                 <button type="submit">Send</button>
             </form>
             {
-                auth.currentUser ? <button onClick={logout}>Logout</button>
+                user ? <button onClick={logout}>Logout</button>
                 : null
             }
         </div> 
