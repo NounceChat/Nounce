@@ -5,7 +5,7 @@ import Test from './pages/Test';
 import './App.scss';
 
 import React, { useRef, useState } from 'react';
-import {auth} from '../public/firebase-config';
+import {auth} from './firebase-config';
 
 function App() {
   return (

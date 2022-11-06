@@ -2,7 +2,7 @@ import "./Home.module.scss"
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom'; 
 import {useAuthState} from 'react-firebase-hooks/auth';
-import {auth} from '../../../public/firebase-config';  
+import {auth} from '../../firebase-config';  
 
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
