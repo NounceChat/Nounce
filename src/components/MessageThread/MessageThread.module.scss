@@ -2,10 +2,11 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-
-    position: relative;
-    margin-bottom: 2vh;
-    border-radius: 20px;
+    // width: 100%;
+    // position: relative;
+    // margin-bottom: 5%;
+    border-radius: 24px;
+    padding: 3%;
 
     &:hover{
         background-color: #303030;
@@ -27,17 +28,39 @@
     .name_mssg{
         display: flex;
         flex-direction: column;
-        justify-items: center;
+        justify-items: left;
         width: 50vw;
 
-        p{
-            line-height: 0.1;
+        .name{
+            font-weight: 800;
+            color: #ffffff;
+
+            width: 30vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            
+            justify-content: left;
+            display: inline-block;
+
+            border: 1px solid #00ff40;  
+        }
+
+        .mssg_preview{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            width: 25vw; 
+            justify-content: left;
+            display: inline-block;
+            
+            // Fix for ellipsis
+            // https://semicolon.dev/tutorial/css/text-overflow-ellipsis-doesnt-work
+            // https://youtu.be/2-odCIy0KOQ
         }
     }
 
-    .name{
-        font-weight: 800;
-    }
 
     .time{
         display: flex;

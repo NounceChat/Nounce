@@ -6,7 +6,8 @@ import {auth} from '../../../public/firebase-config';
 
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
-import MessageThread from "../../components/MessageThread/MessageThread";
+// import MessageThread from "../../components/MessageThread/MessageThread";
+import MessageList from "../../components/MessageThread/MessageList";
 
 function Home() {
     const navigate = useNavigate();    
@@ -17,14 +18,8 @@ function Home() {
     return ( 
         <main>
             <Header />
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
-            <MessageThread/>
+
+            <MessageList />
             
             <Navbar />
         </main>  

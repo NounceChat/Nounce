@@ -10,8 +10,12 @@ const MessageThread = () => {
       </div>
 
       <div className={styles.name_mssg}>
-        <p className={styles.name}>Grogu</p>
-        <p>I am one with the force</p>
+        <p className={styles.name}>
+          Grogu Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero reprehenderit, doloribus obcaecati eaque accusamus recusandae reiciendis sint! Exercitationem, sapiente. Alias aspernatur excepturi quod repudiandae dolores nam, sunt nulla tempore quas?
+        </p>
+        <div className={styles.mssg_preview}>
+          I am one with the force Lorem ipsum blah blah
+          </div>
       </div>
 
       <div className={styles.time}>
@@ -19,7 +23,7 @@ const MessageThread = () => {
       </div>
 
     </div>
-
+    
     // <Stack
     // display="flex"
     // direction="row"
