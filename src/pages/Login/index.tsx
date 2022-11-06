@@ -2,7 +2,7 @@ import "./Login.module.scss"
 import logo from "../../assets/img/logo.png"
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import {auth, db} from '../../../public/firebase-config';  
+import {auth, db} from '../../firebase-config';  
 import {collection, addDoc} from 'firebase/firestore';
 import {RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
 import {useAuthState} from 'react-firebase-hooks/auth';
