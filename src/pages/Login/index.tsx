@@ -2,7 +2,8 @@ import "./Login.module.scss"
 import logo from "../../assets/img/logo.png"
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import {auth} from '../../../public/firebase-config';  
+import {auth, db} from '../../../public/firebase-config';  
+import {collection, addDoc} from 'firebase/firestore';
 import {RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
 import {useAuthState} from 'react-firebase-hooks/auth';
 
@@ -21,15 +22,28 @@ function Login() {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   
+  //replace 09 with +639 at the start regex
+  const e164 = (num:string) => {
+    if (num.substring(0, 2) == "09") 
+      return countryCode + num.substring(2);
+    return num
+  }
+
   useEffect(() => {
     if (user) navigate("/");
   }, [user]);
-
+  
   const verifyOTP = (e:any) => {
     let otp = e.target.value;
     setOTP(otp); 
     if(otp.length === 6) {
       window.confirmationResult.confirm(otp).then((result:any) => {
+        addDoc(collection(db, "phones"), {
+          number: e164(phoneNumber),
+          isBanned: false,
+          isOptedIn: true,
+          createdAt: new Date()
+        });
         console.log(result.user);
       }).catch((error:any) => {
         console.log(error);
@@ -37,7 +51,7 @@ function Login() {
       })
     } 
   }
-
+  
   const generateRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier("auth-container", {
       'size': "invisible",
@@ -48,16 +62,13 @@ function Login() {
   
   const requestOTP = (e:any) => {
     e.preventDefault();
-    let phone = phoneNumber;
     if (phoneNumber.length < 11 || (phoneNumber.substring(0, 3) !== countryCode && phoneNumber.substring(0, 2) !== "09")) {
       alert("Please enter a valid phone number");
       return;
     }
-
-    if (phoneNumber.substring(0, 2) == "09") phone = countryCode + phoneNumber.substring(2);
       
     generateRecaptcha();
-    signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+    signInWithPhoneNumber(auth, e164(phoneNumber), window.recaptchaVerifier)
     .then(confirmationResult => {
       setExpandForm(true);
       window.confirmationResult = confirmationResult;  
@@ -82,7 +93,8 @@ function Login() {
               </div>
             : 
               <form onSubmit={requestOTP}>
-                <input onChange={(e:any) => setPhoneNumber(e.target.value)} type="tel" placeholder="Phone Number"/>
+                <input onChange={(e:any) => setPhoneNumber(e.target.value)}
+                    type="tel" placeholder="Phone Number"/>
                 <button type="submit">
                   <p>Sign In</p>
                 </button>
