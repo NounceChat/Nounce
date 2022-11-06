@@ -1,9 +1,9 @@
-import "./Navbar.module.scss"
+import styles from"./Navbar.module.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faGear, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 const Navbar = () => {
   return (
-    <nav>
+    <nav id={styles.navbar}>
       <a onClick={()=>{alert('test')}}>
         <FontAwesomeIcon icon={faHouse} />
       </a>

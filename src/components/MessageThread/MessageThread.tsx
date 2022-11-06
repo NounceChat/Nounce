@@ -1,23 +1,20 @@
-// import "./MessageThread.module.scss"
-import "./MessageThread.css"
-
-// import { Avatar, Stack, Typography } from "@mui/material"
+import styles from "./MessageThread.module.scss"
 import Grogu from "../../assets/img/Grogu.webp"
 
 const MessageThread = () => {
   return (
-    <div className="mssg-thread">
+    <div id={styles.mssg_thread}>
     
-      <div className="avatar">
+      <div className={styles.avatar}>
         <img src={Grogu} alt="" />
       </div>
 
-      <div className="name-mssg">
-        <p className="name">Grogu</p>
+      <div className={styles.name_mssg}>
+        <p className={styles.name}>Grogu</p>
         <p>I am one with the force</p>
       </div>
 
-      <div className="time">
+      <div className={styles.time}>
         <p>00:00 AM</p>
       </div>
 
