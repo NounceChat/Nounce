@@ -6,7 +6,6 @@ import {auth} from '../../firebase-config';
 
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
-// import MessageThread from "../../components/MessageThread/MessageThread";
 import MessageList from "../../components/MessageThread/MessageList";
 
 function Home() {
