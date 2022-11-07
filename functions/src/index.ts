@@ -2,28 +2,23 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 admin.initializeApp();
 
-export const queueChat = functions.https
-    .onCall((data, context) => {
-        const queueRef = admin.firestore().collection("queue");
-        let queue:any;
-        queueRef.get().then((snapshot) => { 
-            queue = snapshot.docs.map((doc) => doc.data());
-        });
-
-        if (queue.length >= 2) {
-            const chatRef = admin.firestore().collection("chats");
-            const chat = {
-                createdAt: new Date(),
-                messages: [],
-                participants: [queue[0].number, queue[1].number],
-            };
-            queueRef.doc(queue[0].id).delete();
-            queueRef.doc(queue[1].id).delete();
-            chatRef.add(chat)
-                .then((docRef) => {
-                    return docRef.id;
-                })
-        }
+// removes first two users from queue and creates a chat with them and returns chat id if there are less than two users in queue, returns null
+export const queueChat = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+    const queueRef = db.collection("queue");
+    const queue = await queueRef.get();
+    if (queue.size < 2) {
         return null;
     }
-);
+    const first = queue.docs[0];
+    const second = queue.docs[1];
+    const chatRef = db.collection("chats").doc();
+    await chatRef.set({
+        participants: [first.data().number, second.data().number],
+        messages: [],
+        createdAt: new Date()
+    });
+    await first.ref.delete();
+    await second.ref.delete();
+    return chatRef.id;
+});
