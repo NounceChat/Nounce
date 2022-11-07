@@ -1,8 +1,8 @@
 import styles from "./MessageList.module.scss"
 import MessageThread from "./MessageThread"
 import { useEffect, useState} from 'react';
-import {auth, db, functions} from '../../firebase-config';  
-import {collection, addDoc,  query, where, getDocs, updateDoc, orderBy} from 'firebase/firestore';
+import {auth, db} from '../../firebase-config';  
+import {collection, query, where, getDocs, orderBy} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 
 const MessageList = () => {
