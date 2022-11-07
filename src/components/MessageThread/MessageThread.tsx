@@ -3,11 +3,7 @@ import Grogu from "../../assets/img/Grogu.webp"
 import { useEffect, useState} from 'react';
 
 const MessageThread = ({chat}:any) => {
-  const [lastMessage, setLastMessage] = useState<any>({
-    body: "",
-    createdAt: new Date(),
-    number: ""
-  });
+  const [lastMessage, setLastMessage] = useState<any>(null);
   useEffect(() => {
     setLastMessage(chat.messages[chat.messages.length-1]);
   }, [])
@@ -19,15 +15,15 @@ const MessageThread = ({chat}:any) => {
 
         <div className={styles.name_mssg}>
           <p className={styles.name}>
-            {lastMessage.number}
+            {lastMessage?.number}
           </p>
           <div className={styles.mssg_preview}>
-            {lastMessage.body}
+            {lastMessage?.body}
           </div>
         </div>
 
         <div className={styles.time}>
-          <p>{lastMessage.createdAt.toDate().toLocaleTimeString()}</p>
+          <p>{lastMessage?.createdAt.toDate().toLocaleTimeString()}</p>
         </div>
     </div>
   )
