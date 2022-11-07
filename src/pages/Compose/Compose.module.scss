@@ -1,0 +1,97 @@
+#compose{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding-bottom: 5em;
+
+    .title{
+        display: flex;
+    
+        h1{
+            font-weight: normal;
+            font-size: 1.3rem;
+        }
+    }
+
+    .mssg_box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        form{
+            display: flex;
+            align-items: center;
+            justify-items: center;
+            flex-direction: column;
+        }
+       
+        textarea{
+            display: flex;
+            font-size: 0.9rem;
+            font-family: inherit;
+            
+            color: white;
+            background-color: #303030;
+
+            width: 80vw;
+            max-width:80vw;
+            max-height: 40vh;
+            height: auto;
+
+            outline: none;
+            border: none;
+            resize: none;
+
+            border-radius: 25px;
+            // padding: 2% 1% 1% 5%;
+            padding: 5%;
+            // margin-bottom: 3%;
+            
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
+        .submit_buttons{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 100vw;
+            padding: 5%;
+    
+            
+            button{
+                display: flex;
+                width: 150px;
+                height: 78px;
+        
+                background: #CBCBCB;
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                border-radius: 24px;
+                border: none;
+    
+                text-align: center;
+                font-weight: 500;
+                font-family: inherit;
+    
+                justify-content: center;
+                align-items: center;
+            }
+    
+            .submit_single{
+                color: #303030;
+            }
+    
+            .submit_batch{
+                color: white;
+                background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+            }
+        }
+    }
+
+}
