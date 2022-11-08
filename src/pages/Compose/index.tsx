@@ -2,7 +2,10 @@ import styles from './Compose.module.scss';
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
 
-import batchIcon from "../../assets/img/group.svg"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+
+const maxChar:number = 160
 
 function Compose() {
     function autoAdjust(){
@@ -27,13 +30,16 @@ function Compose() {
                         className={styles.textBox}
                         onKeyUp={autoAdjust}
                         onKeyDown={autoAdjust}
-                        maxLength="160"
+                        maxLength={maxChar}
                         />
 
                         <div className={styles.submit_buttons}>
-                            <button className={styles.submit_single}>Single SMS</button>
+                            <button className={styles.submit_single}>
+                                <FontAwesomeIcon icon={faUser}/>
+                                Single SMS
+                                </button>
                             <button className={styles.submit_batch}>
-                                <img src={batchIcon} alt="" />
+                                <FontAwesomeIcon icon={faUserGroup}/>
                                 Batch SMS
                             </button>
                         </div>
