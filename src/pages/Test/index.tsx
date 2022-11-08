@@ -2,7 +2,7 @@ import "./Test.module.scss"
 import { useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {auth, db, functions} from '../../firebase-config';  
-import {collection, addDoc,  query, where, getDocs, updateDoc, limit} from 'firebase/firestore';
+import {collection, addDoc,  query, where, getDocs, getDoc, updateDoc, limit, doc, arrayUnion} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {httpsCallable} from 'firebase/functions';
 
@@ -44,7 +44,17 @@ function Test() {
         });
         const queueChat = httpsCallable(functions, 'queueChat');
         queueChat().then((result) => {
-            console.log(result);
+            const data = result.data;
+            if (typeof data === "string") {
+                updateDoc(doc(db, "chats", data), {
+                    messages: arrayUnion({
+                        number: user?.phoneNumber,
+                        body: "Hello!",
+                        createdAt: new Date(),
+                    }) 
+                });
+                navigate(`/chat/${data}`);
+            }
         })
         .catch((e) => {
             console.log(e.message);

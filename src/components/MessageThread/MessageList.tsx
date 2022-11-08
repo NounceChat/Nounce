@@ -2,7 +2,7 @@ import styles from "./MessageList.module.scss"
 import MessageThread from "./MessageThread"
 import { useEffect, useState} from 'react';
 import {auth, db} from '../../firebase-config';  
-import {collection, query, where, getDocs, orderBy, onSnapshot} from 'firebase/firestore';
+import {collection, query, where, orderBy, onSnapshot} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 
 const MessageList = () => {
@@ -18,6 +18,7 @@ const MessageList = () => {
         chats.push({...doc.data(), id: doc.id})
       );      
       setChats(chats);
+      console.log(chats);
     });
   }, [user])
   
