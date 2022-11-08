@@ -21,6 +21,30 @@ const MessageList = () => {
       setChats(chats);
       console.log(chats);
     });
+
+    const batch_messages_ref = collection(db, "batch_messages");
+    const batch_messages_q = query(batch_messages_ref, where("sender", "==", user?.phoneNumber));
+    const batch_messages_unsubscribe = onSnapshot(batch_messages_q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const new_chat = {
+          id: doc.id,
+          messages: [{
+            id: doc.id,
+            body: doc.data().body,
+            createdAt: doc.data().createdAt,
+            number: doc.data().sender,
+          }],
+          participants: [user?.phoneNumber, doc.data().sender], 
+        }
+        setChats((chats) => {
+          const new_chats = chats.filter((chat) => chat.id !== new_chat.id);
+          new_chats.unshift(new_chat);
+          new_chats.sort((a, b) => b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt);
+          return new_chats;
+        });
+      });
+    });
+    
   }, [user])
   
   return (

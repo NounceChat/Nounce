@@ -23,7 +23,7 @@ function Compose() {
         try{
             setIsLoading(true);
             const messageRef= collection(db, "phones");
-            const q = query(messageRef, where("optedIn", "==", true), limit(3)); 
+            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber), limit(1)); 
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
                 addDoc(collection(db, "batch_messages"), {
@@ -36,6 +36,7 @@ function Compose() {
             setIsLoading(false);
         }
         catch (e) {
+            setIsLoading(false);
             console.error("Error adding document: ", e);
         }
     }
