@@ -17,11 +17,7 @@ const MessageList = () => {
       querySnapshot.forEach((doc) => 
         chats.push({...doc.data(), id: doc.id})
       );
-      //order by last message
-      chats.sort((chat) => {
-        if (chat.messages.length === 0) return 0;
-        return chat.messages[chat.messages.length-1].createdAt;
-      });
+      chats.sort((a, b) => b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt);
       setChats(chats);
       console.log(chats);
     });
