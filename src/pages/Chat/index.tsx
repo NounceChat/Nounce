@@ -1,39 +1,61 @@
 import styles from './Chat.module.scss';
-import Header from "../../components/Header/Header";
-import Navbar from "../../components/Navbar/Navbar";
 import From from "../../components/Bubbles/From";
 import To from "../../components/Bubbles/To";
+import ChatHeader from "../../components/ChatHeader";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useRef} from 'react';
 import {auth, db} from '../../firebase-config';  
-import {collection, query, doc, getDocs, orderBy, onSnapshot} from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, arrayUnion} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {useParams} from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export type MyParams = {
   id: string;
 };
 
 function Chat() {
+    const fieldRef = useRef<HTMLInputElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
+    const [chatMate, setChatMate] = useState<string>('');
+    const [chat, setChat] = useState<any>(''); 
     const [user] = useAuthState(auth);
     const {id} = useParams<keyof MyParams>() as MyParams;
-    useEffect(() => {
+    const unsub = useEffect(() => {
         if (user === null) return;
-
-        const unsub = onSnapshot(doc(db, "chats", id), (doc) => {
+        return onSnapshot(doc(db, "chats", id), (doc) => {
             if (doc.exists()) 
             {
-                console.log(doc.data())
                 setMessages(doc.data().messages);
+                setChatMate(doc.data().participants.filter((user:any) => user !== auth.currentUser?.phoneNumber)[0]);
             }
         });
-        return unsub;
     }, [user, id])
     
+    useEffect(() => {
+        fieldRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    const sendChat = async (e:any) =>
+    {
+        e.preventDefault();
+        if (user === null || chat.length === 0) return;
+        updateDoc(doc(db, "chats", id), {
+            messages: arrayUnion({
+                id: Math.random().toString(36).substring(7),
+                number: user?.phoneNumber,
+                body: chat,
+                createdAt: new Date(),
+            }) 
+        });
+        setChat('');
+    }
+    
     return ( 
-        <div id="chat">
-            <Header />
+        <div id={styles.chat}>
+            <ChatHeader chatMate={chatMate}/>
+
             <div id={styles.chatContainer}>
                 {
                     messages && messages.length>0 ?  messages.map((message) => {
@@ -50,19 +72,22 @@ function Chat() {
                                 </div>
                             )
                         }
-                    }) : <p>No messages</p>
+                    }) : <p className={styles.no_messages}>No messages</p>
                 }
-
-                <TextareaAutosize
-                maxRows={4}
-                aria-label="maximum height"
-                placeholder="Maximum 4 rows"
-                defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                    ut labore et dolore magna aliqua."
-                style={{ width: 200 }}
-                />                
+                <div ref={fieldRef}></div>
             </div>
-            <Navbar />            
+            <form className={styles.sendContainer} onSubmit={sendChat}>
+                <TextareaAutosize
+                    value={chat}
+                    onChange={(e) => setChat(e.target.value)}
+                    maxRows={4}
+                    minRows={1}
+                    placeholder="Type a message..."
+                />                
+                <button type="submit" >
+                    <FontAwesomeIcon icon={faPaperPlane} color="white"/>
+                </button>
+            </form>
         </div>
      );
 }

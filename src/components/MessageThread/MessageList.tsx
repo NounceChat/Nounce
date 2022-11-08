@@ -11,12 +11,17 @@ const MessageList = () => {
   useEffect(() => {
     if (user === null) return;
     const messageRef= collection(db, "chats");
-    const q = query(messageRef, where("participants", "array-contains", user?.phoneNumber), orderBy("createdAt", "desc"));  
+    const q = query(messageRef, where("participants", "array-contains", user?.phoneNumber));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chats:any[] = [];
       querySnapshot.forEach((doc) => 
         chats.push({...doc.data(), id: doc.id})
-      );      
+      );
+      //order by last message
+      chats.sort((chat) => {
+        if (chat.messages.length === 0) return 0;
+        return chat.messages[chat.messages.length-1].createdAt;
+      });
       setChats(chats);
       console.log(chats);
     });

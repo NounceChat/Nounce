@@ -1,0 +1,38 @@
+#chatHeader{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 0.5rem;
+    background: var(--main-bg-color);
+
+    .chatInfo{
+        display:flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.5rem;
+        img{
+            width: 40px;
+            height: auto;
+            border-radius: 100%;
+        }
+        p{
+            margin: 0;
+        }
+    }
+
+    button{
+        position: absolute;
+        border: none;
+        outline: none;
+        background: none;
+        left: 0;
+        top: 0;
+        height: 100%;
+
+        svg{
+            height: 100%;
+            max-height: 40px;
+            padding: 1rem;
+        }
+    }
+}
