@@ -2,11 +2,19 @@ import styles from './Settings.module.scss';
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
 import MaterialUISwitch from '../../components/darkMode/darkModeSwitch';
+import {auth} from '../../firebase-config';
+import { useNavigate } from 'react-router-dom';
 
 import zild from "../../assets/img/zild.jpg"
 
 function Settings() {
-
+    const navigate = useNavigate();
+    const logout  = () => {
+        if (window.confirm("Are you sure you want to logout?")) {
+            auth.signOut();
+            navigate("/login");
+        }
+    }
     return ( 
         <div id={styles.settings}>
             <Header />
@@ -45,7 +53,7 @@ function Settings() {
             </div>
 
             <div className={styles.signOut}>
-                <button>Sign Out</button>
+                <button onClick={logout}>Sign Out</button>
             </div>
 
             <Navbar />

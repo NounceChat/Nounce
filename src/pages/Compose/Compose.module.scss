@@ -20,7 +20,7 @@
         justify-content: center;
         align-items: center;
 
-        form{
+        .form{
             display: flex;
             align-items: center;
             justify-items: center;
@@ -94,6 +94,11 @@
 
                 *{
                     margin-bottom: 5%;
+                }
+
+                &:disabled{
+                    cursor: not-allowed;
+                    filter: grayscale(60%);
                 }
             }
     

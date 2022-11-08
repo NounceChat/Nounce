@@ -3,42 +3,40 @@ import From from "../../components/Bubbles/From";
 import To from "../../components/Bubbles/To";
 import ChatHeader from "../../components/ChatHeader";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import { useEffect, useState, useRef} from 'react';
-import {auth, db} from '../../firebase-config';  
-import { doc, onSnapshot, updateDoc, arrayUnion} from 'firebase/firestore';
-import {useAuthState} from 'react-firebase-hooks/auth';
-import {useParams} from "react-router-dom";
+import { useEffect, useState, useRef } from 'react';
+import { auth, db } from '../../firebase-config';
+import { doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export type MyParams = {
-  id: string;
+    id: string;
 };
 
 function Chat() {
     const fieldRef = useRef<HTMLInputElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [chatMate, setChatMate] = useState<string>('');
-    const [chat, setChat] = useState<any>(''); 
+    const [chat, setChat] = useState<any>('');
     const [user] = useAuthState(auth);
-    const {id} = useParams<keyof MyParams>() as MyParams;
+    const { id } = useParams<keyof MyParams>() as MyParams;
     const unsub = useEffect(() => {
         if (user === null) return;
         return onSnapshot(doc(db, "chats", id), (doc) => {
-            if (doc.exists()) 
-            {
+            if (doc.exists()) {
                 setMessages(doc.data().messages);
-                setChatMate(doc.data().participants.filter((user:any) => user !== auth.currentUser?.phoneNumber)[0]);
+                setChatMate(doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0]);
             }
         });
     }, [user, id])
-    
+
     useEffect(() => {
         fieldRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const sendChat = async (e:any) =>
-    {
+    const sendChat = async (e: any) => {
         e.preventDefault();
         if (user === null || chat.length === 0) return;
         updateDoc(doc(db, "chats", id), {
@@ -47,28 +45,28 @@ function Chat() {
                 number: user?.phoneNumber,
                 body: chat,
                 createdAt: new Date(),
-            }) 
+            })
         });
         setChat('');
     }
-    
-    return ( 
+
+    return (
         <div id={styles.chat}>
-            <ChatHeader chatMate={chatMate}/>
+            <ChatHeader chatMate={chatMate} />
 
             <div id={styles.chatContainer}>
                 {
-                    messages && messages.length>0 ?  messages.map((message) => {
+                    messages && messages.length > 0 ? messages.map((message) => {
                         if (message.number === user?.phoneNumber) {
                             return (
                                 <div key={message.id} className={styles.bubbleContainer}>
-                                    <From message={message}/> 
+                                    <From message={message} />
                                 </div>
                             )
                         } else {
                             return (
                                 <div key={message.id} className={styles.bubbleContainer}>
-                                    <To message={message}/>
+                                    <To message={message} />
                                 </div>
                             )
                         }
@@ -83,13 +81,13 @@ function Chat() {
                     maxRows={4}
                     minRows={1}
                     placeholder="Type a message..."
-                />                
+                />
                 <button type="submit" >
-                    <FontAwesomeIcon icon={faPaperPlane} color="white"/>
+                    <FontAwesomeIcon icon={faPaperPlane} color="white" />
                 </button>
             </form>
         </div>
-     );
+    );
 }
 
 export default Chat;
