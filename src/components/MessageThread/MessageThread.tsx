@@ -25,7 +25,7 @@ const MessageThread = ({chat}:any) => {
         </div>
 
         <div className={styles.time}>
-          <p>{lastMessage?.createdAt.toDate().toLocaleTimeString()}</p>
+          <p>{lastMessage?.createdAt.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</p>
         </div>
     </div>
   )

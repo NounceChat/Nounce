@@ -9,7 +9,7 @@ function ChatHeader({chatMate}:any) {
     return ( 
         <div id={styles.chatHeader}>
             <div className={styles.chatInfo}>
-                <img src={Grogu} /> 
+                <img src={Grogu} title='avatar' /> 
                 <p>{chatMate}</p>
             <button onClick={() => navigate("/")}>
                 <FontAwesomeIcon icon={faChevronLeft} color="white"/>

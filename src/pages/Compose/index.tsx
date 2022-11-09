@@ -7,12 +7,15 @@ import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 
 const maxChar:number = 160
 
-function Compose() {
-    function autoAdjust(){
-        let textInput = document.getElementById('inputText')
+const autoAdjust = () => {
+    // fixed https://bobbyhadz.com/blog/react-useref-object-is-possibly-null
+    let textInput = document.getElementById('inputText') as HTMLInputElement
+    if (textInput != null) {
         textInput.style.height = "auto"
         textInput.style.height = (textInput.scrollHeight)+"px"
     }
+}
+function Compose() {
 
     return ( 
         <div id={styles.compose}>
@@ -24,7 +27,7 @@ function Compose() {
 
             <div className={styles.mssg_box}>
                     <form>
-                        <textarea type="text"
+                        <textarea 
                         id='inputText'
                         placeholder='Message'
                         className={styles.textBox}
