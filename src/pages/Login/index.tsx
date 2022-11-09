@@ -3,7 +3,7 @@ import logo from "../../assets/img/logo.png"
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import {auth, db} from '../../firebase-config';  
-import {collection, addDoc} from 'firebase/firestore';
+import {getDocs, where, collection, addDoc, query} from 'firebase/firestore';
 import {RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth';
 import {useAuthState} from 'react-firebase-hooks/auth';
 
@@ -38,11 +38,16 @@ function Login() {
     setOTP(otp); 
     if(otp.length === 6) {
       window.confirmationResult.confirm(otp).then((result:any) => {
-        addDoc(collection(db, "phones"), {
-          number: e164(phoneNumber),
-          isBanned: false,
-          isOptedIn: true,
-          createdAt: new Date()
+        const myPhone = query(collection(db, "users"), where("number", "==", e164(phoneNumber)));
+        getDocs(myPhone).then((querySnapshot:any) => {
+          if (querySnapshot.empty) {
+            addDoc(collection(db, "phones"), {
+              number: e164(phoneNumber),
+              isBanned: false,
+              isOptedIn: true,
+              createdAt: new Date()
+            });
+          }
         });
         console.log(result.user);
       }).catch((error:any) => {

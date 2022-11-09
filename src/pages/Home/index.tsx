@@ -17,9 +17,7 @@ function Home() {
     return ( 
         <main>
             <Header />
-
             <MessageList />
-            
             <Navbar />
         </main>  
     );

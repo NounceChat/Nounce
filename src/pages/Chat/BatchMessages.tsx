@@ -2,53 +2,45 @@ import styles from './Chat.module.scss';
 import From from "../../components/Bubbles/From";
 import To from "../../components/Bubbles/To";
 import ChatHeader from "../../components/ChatHeader";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import Navbar from "../../components/Navbar/Navbar";
 import { useEffect, useState, useRef } from 'react';
 import { auth, db } from '../../firebase-config';
-import { doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, onSnapshot, } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export type MyParams = {
     id: string;
 };
 
-function Chat() {
+function BatchMessages() {
+    const chatMate = 'Batch SMS by You';
     const fieldRef = useRef<HTMLInputElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
-    const [chatMate, setChatMate] = useState<string>('');
-    const [chat, setChat] = useState<any>('');
     const [user] = useAuthState(auth);
     const { id } = useParams<keyof MyParams>() as MyParams;
     const unsub = useEffect(() => {
         if (user === null) return;
-        return onSnapshot(doc(db, "chats", id), (doc) => {
+        return onSnapshot(doc(db, "batch_messages", id), (doc) => {
             if (doc.exists()) {
-                setMessages(doc.data().messages);
-                setChatMate(doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0]);
+                setMessages((messages) => {
+                    const new_messages = messages.filter((message) => message.id !== id);
+                    new_messages.unshift({
+                        id: id,
+                        body: doc.data().body,
+                        createdAt: doc.data().createdAt,
+                        number: doc.data().sender,
+                    });
+                    return new_messages;
+                });
             }
+            console.log(messages);
         });
     }, [user, id])
 
     useEffect(() => {
         fieldRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
-
-    const sendChat = async (e: any) => {
-        e.preventDefault();
-        if (user === null || chat.length === 0) return;
-        updateDoc(doc(db, "chats", id), {
-            messages: arrayUnion({
-                id: Math.random().toString(36).substring(7),
-                number: user?.phoneNumber,
-                body: chat,
-                createdAt: new Date(),
-            })
-        });
-        setChat('');
-    }
 
     return (
         <div id={styles.chat}>
@@ -74,20 +66,10 @@ function Chat() {
                 }
                 <div ref={fieldRef}></div>
             </div>
-            <form className={styles.sendContainer} onSubmit={sendChat}>
-                <TextareaAutosize
-                    value={chat}
-                    onChange={(e) => setChat(e.target.value)}
-                    maxRows={4}
-                    minRows={1}
-                    placeholder="Type a message..."
-                />
-                <button type="submit" >
-                    <FontAwesomeIcon icon={faPaperPlane} color="white" />
-                </button>
-            </form>
+            <Navbar />
         </div>
     );
 }
 
-export default Chat;
+
+export default BatchMessages;

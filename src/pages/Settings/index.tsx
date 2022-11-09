@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {useNavigate} from "react-router-dom";
-import {auth} from '../../firebase-config'; 
 
 import styles from './Settings.module.scss';
 import Header from "../../components/Header/Header";
 import Navbar from "../../components//Navbar/Navbar";
 import MaterialUISwitch from '../../components/darkMode/darkModeSwitch';
+import {auth} from '../../firebase-config';
+import { useNavigate } from 'react-router-dom';
 
 import zild from "../../assets/img/zild.jpg"
 
@@ -75,7 +75,6 @@ function Settings() {
             navigate("/login");
         }
     }
-
     return ( 
         <div id={styles.settings}>
             <Header />
