@@ -1,5 +1,4 @@
 import styles from "./MessageThread.module.scss"
-import Grogu from "../../assets/img/Grogu.webp"
 import { useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -18,10 +17,13 @@ const MessageThread = ({chat}:any) => {
       :
       nav(`/chat/${chat.id}`)
   }
+
+  const avatar = `https://avatars.dicebear.com/api/identicon/${chat.id}.svg`
+
   return (
     <div id={styles.mssg_thread} onClick={navigateToChat}>
         <div className={styles.avatar}>
-          <img src={Grogu} alt="" />
+          <img src={avatar} alt="" />
         </div>
 
         <div className={styles.name_mssg}>
