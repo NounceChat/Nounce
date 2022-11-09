@@ -6,7 +6,7 @@ import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {auth, db, functions} from '../../firebase-config';  
-import {collection, addDoc,  query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion} from 'firebase/firestore';
+import {collection, addDoc,  query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion, deleteDoc} from 'firebase/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import CircularProgress from '@mui/material/CircularProgress';
 import {httpsCallable} from 'firebase/functions';
@@ -41,39 +41,61 @@ function Compose() {
             console.error("Error adding document: ", e);
         }
     }
-    const submitSingleChat = () => {
+    const submitSingleChat = async () => {
         setIsLoading(true);
-        addDoc(collection(db, "queue"), {
+        const queueAdded = await addDoc(collection(db, "queue"), {
             number: user?.phoneNumber,
         });
+        const dateNow = new Date();
         const queueChat = httpsCallable(functions, 'queueChat');
-        queueChat({phoneNumber: user?.phoneNumber}).then((result) => {
-            //listen to new chats
-            const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
-            const unsub = onSnapshot(q, (d) => {
-                //get to newly added
-                d.docChanges().forEach((change) => {
-                    if (change.type === "added") {
-                        //update the chat with the message
-                        updateDoc(doc(db, "chats", change.doc.id), {
-                            messages: arrayUnion({
-                                id: Math.random().toString(36).substring(7),
-                                number: user?.phoneNumber,
-                                body: message, 
-                                createdAt: new Date(),
-                            })
-                        });
-                            
-                        setMessage('');
-                        navigate(`/chat/${change.doc.id}`);
-                        unsub();
+        queueChat({phoneNumber: user?.phoneNumber}).then((result:any) => {
+            if (result.data == null) {
+                // await until document is with query is created
+                const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
+                const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    for(let doc of querySnapshot.docs) {
+                        if (doc.data().createdAt.toDate() > dateNow && doc.data().participants.length == 2) {
+                            updateDoc(doc.ref , {
+                                messages: arrayUnion({
+                                    id: Math.random().toString(36).substring(7),
+                                    number: user?.phoneNumber,
+                                    body: message, 
+                                    createdAt: new Date(),
+                                })
+                            });
+                            unsubscribe();
+                            setMessage('');
+                            setIsLoading(false);
+                            navigate(`/chat/${doc.id}`);
+                        }
+                    }
+                    const new_chats:any = [];
+                    querySnapshot.forEach((doc) =>{
+                    })
+                    if (new_chats.length === 1) {
                     }
                 });
-            });
-            setIsLoading(false);
+            }
+            else {
+                const chatRef = doc(db, "chats", result.data);
+                updateDoc(chatRef, {
+                    messages: arrayUnion({
+                        id: Math.random().toString(36).substring(7),
+                        number: user?.phoneNumber,
+                        body: message, 
+                        createdAt: new Date(),
+                    })
+                });
+                setMessage('');
+                navigate(`/chat/${result.data}`);
+                setIsLoading(false);
+            }
         })
-        .catch((e) => {
+        .catch(async (e) => {
+            //remove added doc from queueAdded
+            await deleteDoc(doc(db, "queue", queueAdded.id));
             setIsLoading(false);
+
             console.log(e.message);
         })
     }

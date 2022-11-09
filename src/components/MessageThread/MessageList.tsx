@@ -10,6 +10,9 @@ const MessageList = () => {
   const [user] = useAuthState(auth);
   const sortChats = (chats:any[])  => {
       return chats.sort((a, b) => {
+        if (a.messages.length == 0 || b.messages.length == 0) {
+          return 0;
+        }
         const a_timestamp = a.messages[a.messages.length - 1].createdAt;
         const b_timestamp = b.messages[b.messages.length - 1].createdAt;
         return b_timestamp - a_timestamp;
