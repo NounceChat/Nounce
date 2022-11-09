@@ -8,6 +8,13 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 const MessageList = () => {
   const [chats, setChats] = useState<any[]>([]);
   const [user] = useAuthState(auth);
+  const sortChats = (chats:any[])  => {
+      return chats.sort((a, b) => {
+        const a_timestamp = a.messages[a.messages.length - 1].createdAt;
+        const b_timestamp = b.messages[b.messages.length - 1].createdAt;
+        return b_timestamp - a_timestamp;
+      });
+  }
   useEffect(() => {
     if (user === null) return;
     const messageRef= collection(db, "chats");
@@ -17,13 +24,11 @@ const MessageList = () => {
       querySnapshot.forEach((doc) => 
         chats.push({...doc.data(), id: doc.id})
       );
-      chats.sort((a, b) => b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt);
-      setChats(chats);
-      console.log(chats);
+      setChats(sortChats(chats));
     });
 
     const batch_messages_ref = collection(db, "batch_messages");
-    const batch_messages_q = query(batch_messages_ref, where("sender", "==", user?.phoneNumber));
+     const batch_messages_q = query(batch_messages_ref, where("sender", "==", user?.phoneNumber));
     const batch_messages_unsubscribe = onSnapshot(batch_messages_q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const new_chat = {
@@ -39,18 +44,17 @@ const MessageList = () => {
         setChats((chats) => {
           const new_chats = chats.filter((chat) => chat.id !== new_chat.id);
           new_chats.unshift(new_chat);
-          new_chats.sort((a, b) => b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt);
+          sortChats(new_chats);
           return new_chats;
         });
       });
     });
-    
   }, [user])
   
   return (
     <div id={styles.mssg_list}>
       {
-        chats.length>0 ?  chats.map((message) => {
+        chats.length >0 ?  chats.map((message) => {
           return (
             <MessageThread key={message.id} chat={message} />
           )

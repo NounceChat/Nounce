@@ -33,6 +33,7 @@ function Compose() {
                         createdAt: new Date()
                     });
             });
+            setMessage('');
             setIsLoading(false);
         }
         catch (e) {
@@ -46,39 +47,29 @@ function Compose() {
             number: user?.phoneNumber,
         });
         const queueChat = httpsCallable(functions, 'queueChat');
-        queueChat().then((result) => {
-            const data = result.data;
-            if (typeof data === "string") {
-                updateDoc(doc(db, "chats", data), {
-                    messages: arrayUnion({
-                        id: Math.random().toString(36).substring(7),
-                        number: user?.phoneNumber,
-                        body: message, 
-                        createdAt: new Date(),
-                    }) 
+        queueChat({phoneNumber: user?.phoneNumber}).then((result) => {
+            //listen to new chats
+            const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
+            const unsub = onSnapshot(q, (d) => {
+                //get to newly added
+                d.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        //update the chat with the message
+                        updateDoc(doc(db, "chats", change.doc.id), {
+                            messages: arrayUnion({
+                                id: Math.random().toString(36).substring(7),
+                                number: user?.phoneNumber,
+                                body: message, 
+                                createdAt: new Date(),
+                            })
+                        });
+                            
+                        setMessage('');
+                        navigate(`/chat/${change.doc.id}`);
+                        unsub();
+                    }
                 });
-                navigate(`/chat/${data}`);
-            }
-            if(data === null) {
-                const messageRef= collection(db, "chats");
-                const q = query(messageRef, where("participants", "array-contains", user?.phoneNumber));
-                const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                    querySnapshot.docChanges().forEach((change) => {
-                        if (change.type === "added") {
-                            updateDoc(doc(db, "chats", change.doc.id), {
-                                messages: arrayUnion({
-                                    id: Math.random().toString(36).substring(7),
-                                    number: user?.phoneNumber,
-                                    body: message, 
-                                    createdAt: new Date(),
-                                }) 
-                            });
-                            navigate(`/chat/${change.doc.id}`);
-                        }
-                    });
-                });
-                unsubscribe();
-            }
+            });
             setIsLoading(false);
         })
         .catch((e) => {
