@@ -11,15 +11,17 @@ import zild from "../../assets/img/zild.jpg"
 
 function Settings() {
 
+
     const [showEdit, toggleEdit] = useState(false)
 
     const allowEdit = () => {
         toggleEdit(!showEdit)
     }
 
-    const emailInfo = 'zild@gmail.com'
-    const usernameInfo = 'Zild Benitez'
-    const passwordInfo = 'medisina'
+    const [usernameInfo, setUsernameInfo] = useState('Zild Benitez')
+    const [emailInfo, setEmailInfo] = useState('zild@gmail.com')
+    const [passwordInfo, setPassword] = useState('medisina')
+    const [phoneNumber, setPhoneNumber] = useState('09277697972')
 
     const [userInfo, setUserInfo] = useState({
         username: usernameInfo,
@@ -27,6 +29,7 @@ function Settings() {
         password: passwordInfo
     })
 
+    const avatar = `https://avatars.dicebear.com/api/identicon/${phoneNumber}.svg`
 
     const formValid = ():boolean => {
         let myForm = document.getElementById('myForm') as HTMLInputElement
@@ -44,6 +47,10 @@ function Settings() {
         if (myForm.checkValidity() == true) {
                 console.log(`Hide button: ${showEdit}`)
         
+                setUsernameInfo(username_data)
+                setEmailInfo(email_data)
+                setPassword(password_data)
+
                 setUserInfo({
                     username: username_data,
                     email: email_data,
@@ -86,7 +93,7 @@ function Settings() {
             </div>
 
             <div className={styles.setting_avatar}>
-                <img src={zild} alt="" />
+                <img src={avatar} alt="" />
             </div>
 
             <div className={styles.setting_name}>

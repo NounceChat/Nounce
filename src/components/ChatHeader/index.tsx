@@ -6,6 +6,9 @@ import {faChevronLeft} from "@fortawesome/free-solid-svg-icons";
 
 function ChatHeader({chatMate}:any) {
     const navigate = useNavigate();
+
+    // const avatar = `https://avatars.dicebear.com/api/identicon/${chat.id}.svg`
+
     return ( 
         <div id={styles.chatHeader}>
             <div className={styles.chatInfo}>

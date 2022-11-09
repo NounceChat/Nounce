@@ -15,10 +15,12 @@
         width: 30%;
         align-items: center;
         justify-content: center;
+        border-radius: 50%;
 
         img{
-            display: flex;
-            width: 50px;
+            width: 3em;
+            border-radius: 50%;
+            background-color: #ffffff;
         }
     }
 
