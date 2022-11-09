@@ -112,8 +112,6 @@ function Settings() {
                         disabled = {!showEdit}
                         defaultValue={userInfo.username} // user info
                         />
-                        
-                        {/* https://stackoverflow.com/questions/41736213/why-cant-i-change-my-input-value-in-react-even-with-the-onchange-listener */}
 
                         <label htmlFor="email">Email</label>
                         <input type="email" 

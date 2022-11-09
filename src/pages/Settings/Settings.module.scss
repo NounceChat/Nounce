@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding: 12vh 0 10vh;
+    padding: 4em 0 5em 0;
 
     .switch_container{
         width: 100%;
@@ -12,6 +12,8 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
+
+        z-index: -5;
 
         p{
             font-weight: 500;

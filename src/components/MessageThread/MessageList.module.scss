@@ -1,5 +1,6 @@
 #mssg_list{
-    padding-bottom: 5em;
-    padding: 12vh 0 10vh;
+    display: flex;
+    flex-direction: column;
+    padding: 4em 0 4.5em 0;
     overflow-y: scroll;
 }
