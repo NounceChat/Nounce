@@ -38,7 +38,7 @@ function Login() {
     setOTP(otp); 
     if(otp.length === 6) {
       window.confirmationResult.confirm(otp).then((result:any) => {
-        const myPhone = query(collection(db, "users"), where("number", "==", e164(phoneNumber)));
+        const myPhone = query(collection(db, "phones"), where("number", "==", e164(phoneNumber)));
         getDocs(myPhone).then((querySnapshot:any) => {
           if (querySnapshot.empty) {
             addDoc(collection(db, "phones"), {
