@@ -46,61 +46,70 @@ function Compose() {
     const submitSingleChat = async () => {
         setIsLoading(true);
         setIsBatchMessage(false);
-        const queueAdded = await addDoc(collection(db, "queue"), {
+        const queueRef = collection(db, "queue");
+        const queueAdded = await addDoc(queueRef, {
             number: user?.phoneNumber,
         });
         const dateNow = new Date();
-        const queueChat = httpsCallable(functions, 'queueChat');
-        queueChat({phoneNumber: user?.phoneNumber}).then((result:any) => {
-            if (result.data == null) {
-                // await until document is with query is created
-                const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
-                const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                    for(let doc of querySnapshot.docs) {
-                        if (doc.data().createdAt.toDate() > dateNow && doc.data().participants.length == 2) {
-                            updateDoc(doc.ref , {
-                                messages: arrayUnion({
-                                    id: Math.random().toString(36).substring(7),
-                                    number: user?.phoneNumber,
-                                    body: message, 
-                                    createdAt: new Date(),
-                                })
-                            });
-                            unsubscribe();
-                            setMessage('');
-                            setIsLoading(false);
-                            navigate(`/chat/${doc.id}`);
-                        }
-                    }
-                    const new_chats:any = [];
-                    querySnapshot.forEach((doc) =>{
-                    })
-                    if (new_chats.length === 1) {
-                    }
-                });
-            }
-            else {
-                const chatRef = doc(db, "chats", result.data);
-                updateDoc(chatRef, {
-                    messages: arrayUnion({
-                        id: Math.random().toString(36).substring(7),
-                        number: user?.phoneNumber,
-                        body: message, 
-                        createdAt: new Date(),
-                    })
-                });
-                setMessage('');
-                navigate(`/chat/${result.data}`);
-                setIsLoading(false);
-            }
-        })
-        .catch(async (e) => {
-            //remove added doc from queueAdded
-            await deleteDoc(doc(db, "queue", queueAdded.id));
-            setIsLoading(false);
 
-            console.log(e.message);
-        })
+        //wait until queue size is two or less
+        const q = query(queueRef, where("number", "==", user?.phoneNumber), limit(2));
+        const unsubscribe1 = onSnapshot(q, (querySnapshot) => {
+            if (querySnapshot.docs.length <= 2) {
+                unsubscribe1();          
+                const queueChat = httpsCallable(functions, 'queueChat');
+                queueChat({phoneNumber: user?.phoneNumber}).then((result:any) => {
+                    if (result.data == null) {
+                        // await until document is with query is created
+                        const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
+                        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                            for(let doc of querySnapshot.docs) {
+                                if (doc.data().createdAt.toDate() > dateNow && doc.data().participants.length == 2) {
+                                    updateDoc(doc.ref , {
+                                        messages: arrayUnion({
+                                            id: Math.random().toString(36).substring(7),
+                                            number: user?.phoneNumber,
+                                            body: message, 
+                                            createdAt: new Date(),
+                                        })
+                                    });
+                                    unsubscribe();
+                                    setMessage('');
+                                    setIsLoading(false);
+                                    navigate(`/chat/${doc.id}`);
+                                }
+                            }
+                            const new_chats:any = [];
+                            querySnapshot.forEach((doc) =>{
+                            })
+                            if (new_chats.length === 1) {
+                            }
+                        });
+                    }
+                    else {
+                        const chatRef = doc(db, "chats", result.data);
+                        updateDoc(chatRef, {
+                            messages: arrayUnion({
+                                id: Math.random().toString(36).substring(7),
+                                number: user?.phoneNumber,
+                                body: message, 
+                                createdAt: new Date(),
+                            })
+                        });
+                        setMessage('');
+                        navigate(`/chat/${result.data}`);
+                        setIsLoading(false);
+                    }
+                })
+                .catch(async (e) => {
+                    //remove added doc from queueAdded
+                    await deleteDoc(doc(db, "queue", queueAdded.id));
+                    setIsLoading(false);
+        
+                    console.log(e.message);
+                })
+            }
+        });
     }
 
     const inputChange = (e:any) => {
