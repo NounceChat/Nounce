@@ -45,6 +45,9 @@ function Login() {
               number: e164(phoneNumber),
               isBanned: false,
               isOptedIn: true,
+              isDarkMode: true,
+              userName: "Anonymous",
+              email: "",
               createdAt: new Date()
             });
           }

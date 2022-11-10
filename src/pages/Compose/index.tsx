@@ -19,9 +19,11 @@ function Compose() {
     const navigate = useNavigate();
     const [user] = useAuthState(auth);
     const [message, setMessage] = useState('')
+    const [isBatchMessage, setIsBatchMessage] = useState(false);
     const submitBatch = async () => {
         try{
             setIsLoading(true);
+            setIsBatchMessage(true);
             const messageRef= collection(db, "phones");
             const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber), limit(1)); 
             const querySnapshot = await getDocs(q);
@@ -43,6 +45,7 @@ function Compose() {
     }
     const submitSingleChat = async () => {
         setIsLoading(true);
+        setIsBatchMessage(false);
         const queueAdded = await addDoc(collection(db, "queue"), {
             number: user?.phoneNumber,
         });
@@ -113,7 +116,14 @@ function Compose() {
         <div id={styles.compose}>
             <Header />
             { isLoading ? 
-            <CircularProgress color="secondary"/>
+                <div className={styles.loading}>
+                    {isBatchMessage ?
+                    <h1>Sending for Batch SMS Messages...</h1>
+                    : 
+                    <h1>Searching for a Chatmate...</h1>
+                    }
+                    <CircularProgress color="secondary"/>
+                </div>
             : 
             <>
                 <div className={styles.title}>
