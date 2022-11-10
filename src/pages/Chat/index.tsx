@@ -81,6 +81,7 @@ function Chat() {
                     maxRows={4}
                     minRows={1}
                     placeholder="Type a message..."
+                    maxLength={160}
                 />
                 <button type="submit" >
                     <FontAwesomeIcon icon={faPaperPlane} color="white" />
