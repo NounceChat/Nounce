@@ -146,7 +146,7 @@ function Compose() {
                     <CircularProgress color="secondary"/>
                 </div>
             : 
-            <>
+            <div className={styles.container}>
                 <div className={styles.title}>
                     <h1>Send a Message in your Area</h1>
                 </div>
@@ -175,7 +175,7 @@ function Compose() {
                         </div>
                     </div>
                 </div>
-            </>
+            </div>
         }
             <Navbar />
         </div>

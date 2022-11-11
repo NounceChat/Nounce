@@ -10,6 +10,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import Navbar from '../../components/Navbar/Navbar';
 
 export type MyParams = {
     id: string;
@@ -81,20 +82,24 @@ function Chat() {
                     }) : <p className={styles.no_messages}>No messages</p>
                 }
                 <div ref={fieldRef}></div>
+                
+                <form className={styles.sendContainer} onSubmit={sendChat}>
+                    <TextareaAutosize
+                        value={chat}
+                        onChange={(e) => setChat(e.target.value)}
+                        maxRows={4}
+                        minRows={1}
+                        placeholder="Type a message..."
+                        maxLength={160}
+                    />
+                    <button type="submit" >
+                        <FontAwesomeIcon icon={faPaperPlane} color="white" />
+                    </button>
+                </form>
             </div>
-            <form className={styles.sendContainer} onSubmit={sendChat}>
-                <TextareaAutosize
-                    value={chat}
-                    onChange={(e) => setChat(e.target.value)}
-                    maxRows={4}
-                    minRows={1}
-                    placeholder="Type a message..."
-                    maxLength={160}
-                />
-                <button type="submit" >
-                    <FontAwesomeIcon icon={faPaperPlane} color="white" />
-                </button>
-            </form>
+            <div className={styles.navContainer}>
+                <Navbar />
+            </div>
         </div>
     );
 }
