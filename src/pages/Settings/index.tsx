@@ -128,11 +128,10 @@ function Settings() {
             <Header />
 
             <div className={styles.container}>
-                <div className={styles.switch_container}>
+                {/* <div className={styles.switch_container}>
                     <MaterialUISwitch sx={{ m: 1 }} size="medium" checked={isDarkMode} onChange={darkModeHandler} disabled={switchDisabled} />
-                    {/* <Switch color='primary'/> */}
                     <p>Dark Mode</p>
-                </div>
+                </div> */}
 
                 <div className={styles.setting_avatar}>
                     <img src={avatar} alt="" />
