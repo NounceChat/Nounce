@@ -1,18 +1,9 @@
 #compose{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex-direction: column;
-    padding: 4em 0 4.5em 0;
-
-    .title{
-        display: flex;
-    
-        h1{
-            font-weight: normal;
-            font-size: 1.3rem;
-        }
-    }
+    height: 100vh;
 
     .loading, .banned{
         height: 80vh;
@@ -23,6 +14,24 @@
         gap: 1rem;
 
         h1, h3{
+            text-align: center;
+        }
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        padding: 4.5em 0em 4em 0;
+    }
+
+    .title{
+        display: flex;
+        justify-content: center;
+    
+        h1{
+            font-weight: normal;
+            font-size: 1.3rem;
             text-align: center;
         }
     }
@@ -57,9 +66,7 @@
             resize: none;
 
             border-radius: 25px;
-            // padding: 2% 1% 1% 5%;
             padding: 5%;
-            // margin-bottom: 3%;
             
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
@@ -132,4 +139,37 @@
             }
         }
     }
+}
+
+@media (min-width:992px){
+    #compose{
+        .container{
+            padding: 3vh 2vw 2vh 17vw;
+
+        }
+        .title{
+            h1{
+                font-size: 2.5em;
+            }
+        }
+        .mssg_box{
+            textarea{
+                font-size: 1.1em;
+            }
+
+            .submit_buttons{
+                button{
+                    width: 25vw;
+                    height: 10vh;
+
+                    font-size: 1.2em;
+
+                    *{
+                        margin-bottom: 1vh;
+                    }
+                }
+            }
+        }
+    }
+    
 }

@@ -3,8 +3,17 @@
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     flex-direction: column;
-    padding: 4em 0 5em 0;
+    
+    .container{
+        padding: 4em 0 5em 0;   
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
+        overflow-y: scroll;
+    }
 
     .switch_container{
         width: 100%;
@@ -153,6 +162,9 @@
 
     .optIn{
         margin-bottom: 2.5em;
+        span{
+            font-family: inherit;
+        }
     }
 
     .signOut{
@@ -173,6 +185,85 @@
             height: 2.3em;
 
             background-color: #f34949;
+
+            margin-bottom: 3%;
+        }
+    }
+}
+
+@media (min-width:992px){
+    #settings{
+        height: 100vh;
+        padding: unset;
+        
+        .container{
+            width: 100vw;
+            padding: 13vh 2vw 0vh 17vw;
+        }
+
+        .switch_container{
+            align-items: center;
+            max-width: 40vw;
+            transform: scale(1.1);
+        }
+
+        .setting_avatar{
+            img{
+                width: 8rem;
+                height: auto;
+            }
+        }
+
+        .setting_name{
+            height: 7vh;
+            align-items: center;
+            h3{
+                font-size: 2em;
+            }
+        }
+
+        .userInfo{
+            form{
+                .inputFields{
+                    width: 30vw;
+                    height: 30vh;
+                    padding: 0% 2%;
+                    label{
+                        font-size: 1em;
+                    }
+                    input{
+                        font-size: 0.9em;
+                    }
+                }
+            }
+        }
+
+        .setting_buttons{
+            margin-bottom: 2.5vh;
+            button{
+                width: 10em;
+                height: 2.5em;
+                font-size: 1em;
+            }
+        }
+
+        .optIn{
+            span{
+                font-size: 1.2em;
+                font-family: inherit;
+                font-weight: 500;
+                color: #ffffff;
+            }
+        }
+        
+        .signOut{
+            button{
+                width: 10em;
+                height: 2.5em;
+                font-size: 1em;
+
+                margin-bottom: 5vh;
+            }
         }
     }
 }

@@ -132,102 +132,105 @@ function Settings() {
         <div id={styles.settings}>
             <Header />
 
-            <div className={styles.switch_container}>
-                <MaterialUISwitch sx={{ m: 1 }} size="medium" checked={isDarkMode} onChange={darkModeHandler} disabled={switchDisabled} />
-                {/* <Switch color='primary'/> */}
-                <p>Dark Mode</p>
-            </div>
+            <div className={styles.container}>
+                <div className={styles.switch_container}>
+                    <MaterialUISwitch sx={{ m: 1 }} size="medium" checked={isDarkMode} onChange={darkModeHandler} disabled={switchDisabled} />
+                    {/* <Switch color='primary'/> */}
+                    <p>Dark Mode</p>
+                </div>
 
-            <div className={styles.setting_avatar}>
-                <img src={avatar} alt="" />
-            </div>
+                <div className={styles.setting_avatar}>
+                    <img src={avatar} alt="" />
+                </div>
 
-            <div className={styles.setting_name}>
-                <h3>{validateInput(userInfo?.userName)}</h3>
-            </div>
+                <div className={styles.setting_name}>
+                    <h3>{validateInput(userInfo?.userName)}</h3>
+                </div>
 
-            <div className={styles.userInfo}>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
-                    id="myForm"
-                >
-                    <div className={styles.inputFields}>
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text"
-                            title="username"
-                            className={styles.userName}
-                            id="userName"
-                            value={validateInput(usernameInfo)}
-                            onChange={(e) => {
-                                setUsernameInfo(e.target.value);
-                            }}
-                            required
-                            disabled={!showEdit}
-                        />
+                <div className={styles.userInfo}>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                        }}
+                        id="myForm"
+                    >
+                        <div className={styles.inputFields}>
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                title="username"
+                                className={styles.userName}
+                                id="userName"
+                                value={validateInput(usernameInfo)}
+                                onChange={(e) => {
+                                    setUsernameInfo(e.target.value);
+                                }}
+                                required
+                                disabled={!showEdit}
+                            />
 
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            title="email"
-                            className={styles.Email}
-                            id="email"
-                            value={validateInput(emailInfo)}
-                            onChange={(e) => {
-                                setEmailInfo(e.target.value);
-                            }}
-                            required
-                            disabled={!showEdit}
-                        />
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                title="email"
+                                className={styles.Email}
+                                id="email"
+                                value={validateInput(emailInfo)}
+                                onChange={(e) => {
+                                    setEmailInfo(e.target.value);
+                                }}
+                                required
+                                disabled={!showEdit}
+                            />
 
-                        <label htmlFor="number">Phone Number</label>
-                        <input
-                            title="number"
-                            className={styles.phoneNumber}
-                            id="number"
-                            value={validateInput(numberInfo)}
-                            disabled={true}
-                        />
-                    </div>
+                            <label htmlFor="number">Phone Number</label>
+                            <input
+                                title="number"
+                                className={styles.phoneNumber}
+                                id="number"
+                                value={validateInput(numberInfo)}
+                                disabled={true}
+                            />
+                        </div>
 
 
-                    <div className={styles.setting_buttons}>
-                        {!showEdit && (
-                            <button className={styles.edit} onClick={allowEdit}>
-                                Edit
-                            </button>
-                        )}
-                        {showEdit && (
-                            <>
-                                <button
-                                    className={styles.cancel}
-                                    onClick={() => {
-                                        allowEdit(), revertBack();
-                                    }}
-                                >
-                                    Cancel
+                        <div className={styles.setting_buttons}>
+                            {!showEdit && (
+                                <button className={styles.edit} onClick={allowEdit}>
+                                    Edit
                                 </button>
+                            )}
+                            {showEdit && (
+                                <>
+                                    <button
+                                        className={styles.cancel}
+                                        onClick={() => {
+                                            allowEdit(), revertBack();
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
 
-                                <button
-                                    className={styles.save}
-                                    id="saveBtn"
-                                    onClick={ saveChanges }
-                                >
-                                    Save
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </form>
+                                    <button
+                                        className={styles.save}
+                                        id="saveBtn"
+                                        onClick={ saveChanges }
+                                    >
+                                        Save
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </form>
+                </div>
+
+                <FormControlLabel className={styles.optIn} label="Opt In for Announcements" control={<Switch color='secondary' id='optIn' title="optIn" checked={isOptedIn} onChange={optInHandler} />} />
+
+                <div className={styles.signOut}>
+                    <button onClick={logout}>Sign Out</button>
+                </div>
             </div>
 
-            <FormControlLabel className={styles.optIn} label="Opt In for Announcements" control={<Switch color='secondary' id='optIn' title="optIn" checked={isOptedIn} onChange={optInHandler} />} />
-
-            <div className={styles.signOut}>
-                <button onClick={logout}>Sign Out</button>
-            </div>
 
             <Navbar />
         </div>

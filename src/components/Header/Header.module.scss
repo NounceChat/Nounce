@@ -16,16 +16,28 @@ header{
         width: auto;
         position: absolute;
     }
+
+    h1{
+        display: none;
+    }
 }
 
 @media (min-width:992px){
     header{
-        left: 15vw;
+        margin-left: 50vw;
+        justify-content: flex-start;
         height: 13vh;
         
         img{
-            margin-right: 15vw;
-            height: 10vh;
+            display: none;   
+            // margin-right: 15vw;
+            // height: 10vh;
+        }
+
+        h1{
+            display: flex;
+            font-size: 2.8em;
+            // margin-right: 15vw;
         }
     }
 }
