@@ -5,7 +5,7 @@ import ChatHeader from "../../components/ChatHeader";
 import Navbar from "../../components/Navbar/Navbar";
 import { useEffect, useState, useRef } from 'react';
 import { auth, db } from '../../firebase-config';
-import { doc, onSnapshot, } from 'firebase/firestore';
+import { doc, onSnapshot, getDocs, query, collection, where} from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from "react-router-dom";
 
@@ -14,14 +14,14 @@ export type MyParams = {
 };
 
 function BatchMessages() {
-    const chatMate = 'Batch SMS by You';
+    const [chatMate, setChatMate] = useState<string>('');
     const fieldRef = useRef<HTMLInputElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [user] = useAuthState(auth);
     const { id } = useParams<keyof MyParams>() as MyParams;
     const unsub = useEffect(() => {
         if (user === null) return;
-        return onSnapshot(doc(db, "batch_messages", id), (doc) => {
+        onSnapshot(doc(db, "announcements", id), (doc) => {
             if (doc.exists()) {
                 setMessages((messages) => {
                     const new_messages = messages.filter((message) => message.id !== id);
@@ -33,6 +33,20 @@ function BatchMessages() {
                     });
                     return new_messages;
                 });
+
+                if (doc.data().sender !== user?.phoneNumber) {
+                    getDocs(query(collection(db, "phones"), where("number", "==", doc.data().sender)))
+                    .then((querySnapshot) => {
+                        setChatMate("Announcement by "+querySnapshot.docs[0].data().userName);
+                    })
+                    .catch((error) => {
+                        setChatMate('Announcement by You');
+                        console.log("Error getting documents: ", error);
+                    })
+                }
+                else{
+                    setChatMate('Announcement by You');
+                }
             }
             console.log(messages);
         });

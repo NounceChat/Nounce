@@ -15,7 +15,8 @@ import {
 import { auth, db } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Switch, { SwitchProps } from "@mui/material/Switch";
+import Switch from "@mui/material/Switch";
+import { FormControlLabel } from "@mui/material";
 
 function Settings() {
     const [user] = useAuthState(auth);
@@ -23,8 +24,10 @@ function Settings() {
     const [usernameInfo, setUsernameInfo] = useState("");
     const [emailInfo, setEmailInfo] = useState("");
     const [isDarkMode, setIsDarkMode] = useState(true);
+    const [isOptedIn, setIsOptedIn] = useState(true);
     const [numberInfo, setNumber] = useState("");
     const [userInfo, setUserInfo] = useState<any>(null);
+    const [switchDisabled, setSwitchDisabled] = useState(true);
 
     const navigate = useNavigate();
     const logout = () => {
@@ -52,6 +55,9 @@ function Settings() {
             setUsernameInfo(phone.data().userName);
             setEmailInfo(phone.data().email);
             setNumber(phone.data().number);
+            setIsOptedIn(phone.data().isOptedIn);
+            setIsDarkMode(phone.data().isDarkMode);
+            setSwitchDisabled(false);
         });
     }, [user]);
 
@@ -78,13 +84,11 @@ function Settings() {
         updateDoc(doc(db, "phones", userInfo.id), {
             userName: usernameInfo,
             email: emailInfo,
-            isDarkMode: isDarkMode,
         });
         setUserInfo({
             ...userInfo,
             userName: usernameInfo,
             email: emailInfo,
-            isDarkMode: isDarkMode,
         });
         allowEdit();
     };
@@ -93,12 +97,43 @@ function Settings() {
         if (input == null) return "";
         return input;
     };
+
+    const darkModeHandler = () => {
+        setSwitchDisabled(true);
+        setIsDarkMode(!isDarkMode);
+        updateDoc(doc(db, "phones", userInfo.id), {
+            isDarkMode: !isDarkMode,
+        })
+        .then(() => {
+            setSwitchDisabled(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            setSwitchDisabled(false);
+        })
+    }
+
+    const optInHandler = () => {
+        setSwitchDisabled(true);
+        setIsOptedIn(!isOptedIn);
+        updateDoc(doc(db, "phones", userInfo.id), {
+            isOptedIn: !isOptedIn,
+        })
+        .then(() => {
+            setSwitchDisabled(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            setSwitchDisabled(false);
+        })
+    }
+
     return (
         <div id={styles.settings}>
             <Header />
 
             <div className={styles.switch_container}>
-                <MaterialUISwitch sx={{ m: 1 }} size="medium" defaultChecked onClick={toggleDark} />
+                <MaterialUISwitch sx={{ m: 1 }} size="medium" checked={isDarkMode} onChange={darkModeHandler} disabled={switchDisabled} />
                 {/* <Switch color='primary'/> */}
                 <p>Dark Mode</p>
             </div>
@@ -127,7 +162,7 @@ function Settings() {
                             id="userName"
                             value={validateInput(usernameInfo)}
                             onChange={(e) => {
-                                setUsernameInfo(e.target.value );
+                                setUsernameInfo(e.target.value);
                             }}
                             required
                             disabled={!showEdit}
@@ -157,6 +192,7 @@ function Settings() {
                         />
                     </div>
 
+
                     <div className={styles.setting_buttons}>
                         {!showEdit && (
                             <button className={styles.edit} onClick={allowEdit}>
@@ -177,10 +213,7 @@ function Settings() {
                                 <button
                                     className={styles.save}
                                     id="saveBtn"
-                                    onClick={
-                                        saveChanges
-                                        //insert function for updating user info (back end)
-                                    }
+                                    onClick={ saveChanges }
                                 >
                                     Save
                                 </button>
@@ -189,6 +222,8 @@ function Settings() {
                     </div>
                 </form>
             </div>
+
+            <FormControlLabel className={styles.optIn} label="Opt In for Announcements" control={<Switch color='secondary' id='optIn' title="optIn" checked={isOptedIn} onChange={optInHandler} />} />
 
             <div className={styles.signOut}>
                 <button onClick={logout}>Sign Out</button>

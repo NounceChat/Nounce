@@ -71,13 +71,14 @@ function Login() {
   
   const requestOTP = (e:any) => {
     e.preventDefault();
-    if (phoneNumber.length < 11 || (phoneNumber.substring(0, 3) !== countryCode && phoneNumber.substring(0, 2) !== "09")) {
+    const convertedNumber = e164(phoneNumber);
+    if (convertedNumber.length < 13 || convertedNumber.substring(0, 4) !== countryCode) { 
       alert("Please enter a valid phone number");
       return;
     }
       
     generateRecaptcha();
-    signInWithPhoneNumber(auth, e164(phoneNumber), window.recaptchaVerifier)
+    signInWithPhoneNumber(auth, convertedNumber, window.recaptchaVerifier)
     .then(confirmationResult => {
       setExpandForm(true);
       window.confirmationResult = confirmationResult;  
