@@ -158,36 +158,36 @@ function Compose() {
             : 
             <>
             { !isBanned ?
-                <>
-                <div className={styles.title}>
-                    <h1>Send a Message in your Area</h1>
-                </div>
+                <div className={styles.container}>
+                    <div className={styles.title}>
+                        <h1>Send a Message in your Area</h1>
+                    </div>
 
-                <div className={styles.mssg_box}>
-                    <div className={styles.form}> 
-                        <TextareaAutosize
-                            value={message}
-                            onChange={inputChange}
-                            className={styles.textBox}
-                            maxLength={maxChar}
-                            minRows={2}
-                            maxRows={6}
-                            placeholder='Message'
-                        />
+                    <div className={styles.mssg_box}>
+                        <div className={styles.form}> 
+                            <TextareaAutosize
+                                value={message}
+                                onChange={inputChange}
+                                className={styles.textBox}
+                                maxLength={maxChar}
+                                minRows={2}
+                                maxRows={6}
+                                placeholder='Message'
+                            />
 
-                        <div className={styles.submit_buttons}>
-                            <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
-                                <FontAwesomeIcon icon={faUser}/>
-                                Single Chat
+                            <div className={styles.submit_buttons}>
+                                <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
+                                    <FontAwesomeIcon icon={faUser}/>
+                                    Single Chat
+                                    </button>
+                                <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
+                                    <FontAwesomeIcon icon={faUserGroup}/>
+                                    Announce
                                 </button>
-                            <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
-                                <FontAwesomeIcon icon={faUserGroup}/>
-                                Announce
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </>
                 : 
                 <div className={styles.banned}>
                     <h3>You have been banned from using this service.</h3>
