@@ -92,44 +92,31 @@ function Chat() {
                     }) : <p className={styles.no_messages}>No messages</p>
                 }
                 <div ref={fieldRef}></div>
-                
-                <form className={styles.sendContainer} onSubmit={sendChat}>
-                    <TextareaAutosize
-                        value={chat}
-                        onChange={(e) => setChat(e.target.value)}
-                        maxRows={4}
-                        minRows={1}
-                        placeholder="Type a message..."
-                        maxLength={160}
-                    />
-                    <button type="submit" >
-                        <FontAwesomeIcon icon={faPaperPlane} color="white" />
-                    </button>
-                </form>
+           
+                {
+                    isBanned ?
+                    <div className={styles.banned}>
+                        <p>You are banned from sending messages</p>
+                    </div>
+                    :
+                    <form className={styles.sendContainer} onSubmit={sendChat}>
+                        <TextareaAutosize
+                            value={chat}
+                            onChange={(e) => setChat(e.target.value)}
+                            maxRows={4}
+                            minRows={1}
+                            placeholder="Type a message..."
+                            maxLength={160}
+                        />
+                        <button type="submit" >
+                            <FontAwesomeIcon icon={faPaperPlane} color="white" />
+                        </button>
+                    </form>
+                }
             </div>
             <div className={styles.navContainer}>
                 <Navbar />
             </div>
-            {
-                isBanned ?
-                <div className={styles.banned}>
-                    <p>You are banned from sending messages</p>
-                </div>
-                :
-                <form className={styles.sendContainer} onSubmit={sendChat}>
-                    <TextareaAutosize
-                        value={chat}
-                        onChange={(e) => setChat(e.target.value)}
-                        maxRows={4}
-                        minRows={1}
-                        placeholder="Type a message..."
-                        maxLength={160}
-                    />
-                    <button type="submit" >
-                        <FontAwesomeIcon icon={faPaperPlane} color="white" />
-                    </button>
-                </form>
-            }
         </div>
     );
 }
