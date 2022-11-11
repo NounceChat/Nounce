@@ -142,6 +142,12 @@
             width: 9em;
             height: 2.3em;
             margin: 0% 1% 0% 1%;
+
+            &:hover {
+                transition: 0.2s all ease-out;
+                scale: (0.97);
+                background: #3a3a3a;
+            }
         }
 
         .edit{
@@ -153,9 +159,8 @@
         }
         .save{
             background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
-            
-            &:disabled{
-                filter: opacity(20%);
+            &:hover{
+                background: linear-gradient(180deg, #8000FF 0%, #C000FE 100%);
             }
         }
     }   
@@ -187,6 +192,12 @@
             background-color: #f34949;
 
             margin-bottom: 3%;
+
+            &:hover{
+                transition: 0.2s all ease-out;
+                scale: (0.97);
+                background: #ee6060;
+            }
         }
     }
 }

@@ -67,11 +67,6 @@ function Settings() {
         toggleEdit(!showEdit);
     };
 
-    const toggleDark = () => {
-        setIsDarkMode(!isDarkMode);
-        console.log(!isDarkMode)
-    };
-
     const revertBack = () => {
         setUsernameInfo(userInfo.userName);
         setEmailInfo(userInfo.email);
