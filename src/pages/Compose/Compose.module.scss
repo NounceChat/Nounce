@@ -124,6 +124,12 @@
             .submit_single{
                 color: #303030;
 
+                &:hover {
+                    transition: 0.2s all ease-out;
+                    scale: (0.97);
+                    background: #d0d0d0;
+                }
+
                 svg{
                     height: 1.5em;
                 }
@@ -132,6 +138,12 @@
             .submit_batch{
                 color: white;
                 background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+
+                &:hover {
+                    transition: 0.2s all ease-out;
+                    scale: (0.97);
+                    background: linear-gradient(180deg, #8000FF 0%, #C000FE 100%);
+                }
 
                 svg{
                     height: 1.5em;
