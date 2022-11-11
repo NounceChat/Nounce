@@ -3,7 +3,7 @@ import Header from "../../components/Header/Header";
 import Navbar from "../../components/Navbar/Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
-import { useState} from 'react';
+import { useState, useEffect } from 'react';
 import {useNavigate} from "react-router-dom";
 import {auth, db, functions} from '../../firebase-config';  
 import {collection, addDoc,  query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion, deleteDoc} from 'firebase/firestore';
@@ -22,6 +22,16 @@ function Compose() {
     const [message, setMessage] = useState('')
     const [isBatchMessage, setIsBatchMessage] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [isBanned, setIsBanned] = useState(false);
+
+    useEffect(() => {
+        if (user === null) return;
+        const q = query(collection(db, "phones"), where("number", "==", user?.phoneNumber));
+        onSnapshot(q, (docSnap) => {
+            setIsBanned(docSnap.docs[0].data().isBanned);
+        });
+    }, [user])
+
     const submitBatch = async () => {
         try{
             setIsLoading(true);
@@ -146,36 +156,44 @@ function Compose() {
                     <CircularProgress color="secondary"/>
                 </div>
             : 
-            <div className={styles.container}>
-                <div className={styles.title}>
-                    <h1>Send a Message in your Area</h1>
-                </div>
+            <>
+            { !isBanned ?
+                <div className={styles.container}>
+                    <div className={styles.title}>
+                        <h1>Send a Message in your Area</h1>
+                    </div>
 
-                <div className={styles.mssg_box}>
-                    <div className={styles.form}> 
-                        <TextareaAutosize
-                            value={message}
-                            onChange={inputChange}
-                            className={styles.textBox}
-                            maxLength={maxChar}
-                            minRows={2}
-                            maxRows={6}
-                            placeholder='Message'
-                        />
+                    <div className={styles.mssg_box}>
+                        <div className={styles.form}> 
+                            <TextareaAutosize
+                                value={message}
+                                onChange={inputChange}
+                                className={styles.textBox}
+                                maxLength={maxChar}
+                                minRows={2}
+                                maxRows={6}
+                                placeholder='Message'
+                            />
 
-                        <div className={styles.submit_buttons}>
-                            <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
-                                <FontAwesomeIcon icon={faUser}/>
-                                Single Chat
+                            <div className={styles.submit_buttons}>
+                                <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
+                                    <FontAwesomeIcon icon={faUser}/>
+                                    Single Chat
+                                    </button>
+                                <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
+                                    <FontAwesomeIcon icon={faUserGroup}/>
+                                    Announce
                                 </button>
-                            <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
-                                <FontAwesomeIcon icon={faUserGroup}/>
-                                Announce
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                : 
+                <div className={styles.banned}>
+                    <h3>You have been banned from using this service.</h3>
+                </div>
+            }
+            </>
         }
             <Navbar />
         </div>
