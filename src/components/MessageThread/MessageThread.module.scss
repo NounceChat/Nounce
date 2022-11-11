@@ -16,11 +16,13 @@
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-
+        
         img{
-            width: 3em;
+            width: 3.5em;
             border-radius: 50%;
             background-color: #ffffff;
+            border: 2px solid #8000FF;
+            margin-right: 2%;
         }
     }
 
@@ -62,6 +64,20 @@
     .time{
         display: flex;
         justify-content: flex-end;
-        width: 60%;
+        width: 40%;
+    }
+}
+
+@media (min-width:992px){
+    #mssg_thread{
+        .avatar{
+            img{
+                width: 5em;
+            }
+        }
+
+        p{
+            font-size: 1.3em;
+        }
     }
 }

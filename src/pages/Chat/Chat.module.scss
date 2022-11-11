@@ -20,6 +20,8 @@
         min-height: 10vh;
         padding: 0.5rem;
         display:grid;
+        align-items: center;
+        justify-items: center;
         grid-template-columns: 1fr 50px;
         background: var(--main-bg-color);
         
@@ -47,6 +49,32 @@
             svg{
                 height: auto;
                 width: 100%;
+            }
+        }
+    }
+}
+
+@media (min-width:992px){
+    #chat{
+        #chatContainer{
+            padding: 6vh 10vw 2vh 10vw; 
+        }
+        .sendContainer{
+            grid-template-columns: 90vw 10vw;
+
+            textarea{
+                font-size: 1rem;
+                width: 90%;
+            }
+            button{
+                justify-self: flex-start;
+                border-radius: 10px;
+                svg{
+                    width: 2vw;
+                }
+                &:hover{
+                    background-color: #303030;
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
-import "./Login.module.scss"
+import styles from "./Login.module.scss"
 import logo from "../../assets/img/logo.png"
+import LoginImg from "../../assets/img/LogInDesk.svg"
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import {auth, db} from '../../firebase-config';  
@@ -91,7 +92,12 @@ function Login() {
   return ( 
       <section>
           <img src={logo} alt="logo" />
+          <div className={styles.intro_container}>
+            <h1 className={styles.intro_message}>Keep track of the news and recent updates</h1>
+          </div>
+          <p className={styles.description}><strong>Nounce </strong> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam</p>
           <h1>Welcome Back!</h1>
+          <img src={LoginImg} alt="loginImg" className={styles.loginImg} />
           {
             expandForm === true ?
               <div>

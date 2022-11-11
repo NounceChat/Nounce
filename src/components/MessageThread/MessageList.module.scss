@@ -1,6 +1,13 @@
 #mssg_list{
     display: flex;
     flex-direction: column;
-    padding: 4em 0 4.5em 0;
+    padding: 4.5em 0 4.5em 0;
     overflow-y: scroll;
+}
+
+@media (min-width:992px){
+    #mssg_list{
+        margin-left: 15vw;
+        padding: 13vh 0 1em 0;
+    }
 }
