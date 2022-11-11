@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: center;
     border-radius: 24px;
-    padding:10px; 
+    padding: clamp(0rem, -0.2188rem + 1.25vw, 0.625rem);
 
     &:hover{
         background-color: #303030;
@@ -65,6 +65,7 @@
         display: flex;
         justify-content: flex-end;
         width: 40%;
+        margin-right: 5%;
     }
 }
 
