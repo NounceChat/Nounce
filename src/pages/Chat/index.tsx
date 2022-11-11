@@ -22,6 +22,16 @@ function Chat() {
     const [chat, setChat] = useState<any>('');
     const [user] = useAuthState(auth);
     const { id } = useParams<keyof MyParams>() as MyParams;
+    const [isBanned, setIsBanned] = useState(false);
+
+    useEffect(() => {
+        if (user === null) return;
+        const q = query(collection(db, "phones"), where("number", "==", user?.phoneNumber));
+        onSnapshot(q, (docSnap) => {
+            setIsBanned(docSnap.docs[0].data().isBanned);
+        });
+    }, [user])
+
     const unsub = useEffect(() => {
         if (user === null) return;
 
@@ -82,19 +92,26 @@ function Chat() {
                 }
                 <div ref={fieldRef}></div>
             </div>
-            <form className={styles.sendContainer} onSubmit={sendChat}>
-                <TextareaAutosize
-                    value={chat}
-                    onChange={(e) => setChat(e.target.value)}
-                    maxRows={4}
-                    minRows={1}
-                    placeholder="Type a message..."
-                    maxLength={160}
-                />
-                <button type="submit" >
-                    <FontAwesomeIcon icon={faPaperPlane} color="white" />
-                </button>
-            </form>
+            {
+                isBanned ?
+                <div className={styles.banned}>
+                    <p>You are banned from sending messages</p>
+                </div>
+                :
+                <form className={styles.sendContainer} onSubmit={sendChat}>
+                    <TextareaAutosize
+                        value={chat}
+                        onChange={(e) => setChat(e.target.value)}
+                        maxRows={4}
+                        minRows={1}
+                        placeholder="Type a message..."
+                        maxLength={160}
+                    />
+                    <button type="submit" >
+                        <FontAwesomeIcon icon={faPaperPlane} color="white" />
+                    </button>
+                </form>
+            }
         </div>
     );
 }

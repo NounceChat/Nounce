@@ -24,9 +24,10 @@ const MessageList = () => {
     const q = query(messageRef, where("participants", "array-contains", user?.phoneNumber));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const chats:any[] = [];
-      querySnapshot.forEach((doc) => 
-        chats.push({...doc.data(), id: doc.id, isBatch : false})
-      );
+      querySnapshot.forEach((doc) => {
+        if(doc.data().messages.length > 0)
+          chats.push({...doc.data(), id: doc.id, isBatch : false})
+      });
       setChats(sortChats(chats));
     });
 

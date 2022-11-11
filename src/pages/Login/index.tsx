@@ -49,7 +49,8 @@ function Login() {
               isDarkMode: true,
               userName: "Anonymous",
               email: "",
-              createdAt: new Date()
+              createdAt: new Date(),
+              profanityStrike: 5
             });
           }
         });
