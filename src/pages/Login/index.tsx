@@ -92,16 +92,25 @@ function Login() {
 
   return ( 
       <section>
-          <img src={logo} alt="logo" />
-          <div className={styles.intro_container}>
-            <h1 className={styles.intro_message}>Keep track of the news and recent updates</h1>
+          <div className={styles.logoContainer}>
+            <img src={logo} alt="logo" />
+            <h1>Nounce</h1>
           </div>
-          <p className={styles.description}><strong>Nounce </strong> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam</p>
+          <div className={styles.intro_container}>
+            <h1 className={styles.intro_message}>Announce your presence in your area</h1>
+          </div>
+          <p className={styles.description}>
+            The Proximity-based chat app.
+            <br />
+            Connect with users within a mile radius of you.
+            <br />
+            When you want to. Around you.
+          </p>
           <h1>Welcome Back!</h1>
           <img src={LoginImg} alt="loginImg" className={styles.loginImg} />
           {
             expandForm === true ?
-              <div>
+              <div className={styles.OTPContainer}>
                 <input type="number" maxLength={6} id="otpInput" value={OTP} onChange={verifyOTP} placeholder="Enter your OTP:"/>
                 <button type="submit">
                   <p>Verify</p>

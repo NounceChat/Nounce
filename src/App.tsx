@@ -19,7 +19,6 @@ function App() {
           <Route path='/settings' element={<Settings/>}></Route>
           <Route path='/chat/:id' element={<Chat/>}></Route>
           <Route path='/announcement/:id' element={<BatchMessages/>}></Route>
-          <Route path='/test' element={< Test />}></Route>
         </Routes>
       </div>
     </Router>

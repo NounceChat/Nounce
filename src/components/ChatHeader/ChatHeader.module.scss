@@ -51,15 +51,16 @@
         .chatInfo{
             margin-right: 15vw;
             img{
-                width: 4.3em;
+                width: 45px;
                 border: 0.2em solid #8000FF;
             }
             p{
-                font-size: 1.3em;
+                font-size: 1rem;
             }
         }
         button{
             border-radius: 25px;
+            margin: 0 1rem; 
             &:hover{
                 background-color: #303030;
             }
