@@ -8,12 +8,24 @@ section
     padding: 0 1rem;
 
     img {
-        width: 100px;
-        height: 100px;
+        width: 10rem;
+        height: 10rem;
     }
 
     h1{
         line-height: 36px;
+    }
+
+    .intro_message{
+        display: none;
+    }
+
+    .loginImg{
+        display: none;
+    }
+
+    .description{
+        display: none;
     }
 
     button {
@@ -57,5 +69,74 @@ section
 
     form {
         width: 100%;
+    }
+}
+
+@media (min-width:992px){
+    section{
+        justify-content: unset;
+        padding: 7vh 7vw 0 7vw;
+        align-items: unset;
+
+        img{
+            align-self: flex-start;
+            height: 4em;
+            width: 4em;
+        }
+
+        h1{
+            display: none;
+        }
+
+        input{
+            width: 20%;
+            height: 30%;
+            font-size: 1.2em;
+            margin-bottom: 2%;
+        }
+
+        .intro_container{
+            display: flex;
+            width: 25em;
+        }
+
+        .loginImg{
+            display: block;
+            position: absolute;
+            top: 16vh;
+            right: 9vw;
+            width: 40vw;
+            height: 40vw;
+        }
+
+        .description{
+            display: block;
+            margin-bottom: 5%;
+        }
+
+        p{
+            width: 30em;
+            font-size: 1.1em;
+        }
+
+        .intro_message{
+            display: flex;
+            font-size: 3em;
+            color: #BB01F3;
+            line-height: 7vh;
+        }
+
+        button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 15%;
+            height: 30%;
+
+            p{
+                font-size: 0.9em;
+            }
+        }
+
     }
 }

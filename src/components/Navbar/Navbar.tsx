@@ -16,12 +16,15 @@ const Navbar = () => {
     <nav id={styles.navbar}>
       <a onClick={()=>{navigate("/"); }}>
         <FontAwesomeIcon icon={faHouse} color={iconColors.homeColor}/>
+        <p style={{color: iconColors.homeColor}}>Home</p>
       </a>
       <a onClick={()=>{navigate("/compose")}}>
-      <FontAwesomeIcon icon={faPenToSquare} color={iconColors.composeColor}/>
+        <FontAwesomeIcon icon={faPenToSquare} color={iconColors.composeColor}/>
+        <p style={{color: iconColors.composeColor}}>Compose</p>
       </a>
       <a onClick={()=>{navigate("/settings")}}>
         <FontAwesomeIcon icon={faGear} color={iconColors.settingsColor}/>
+        <p style={{color: iconColors.settingsColor}}>Settings</p>
       </a>
     </nav>
   )

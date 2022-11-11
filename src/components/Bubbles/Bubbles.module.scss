@@ -27,3 +27,14 @@
     line-height:21px;
     font-size: 1rem;
 }
+
+@media (min-width:992px){
+    .bubble{
+        width: 47vw;
+        font-size: 1.1rem;
+
+        .time{
+            font-size: 1rem;
+        }
+    }
+}

@@ -8,6 +8,7 @@
     overflow-x: auto;
     display: flex;
 
+    
     a{
         display: flex;
         flex-direction: column;
@@ -18,5 +19,35 @@
         overflow: hidden;
         white-space: nowrap;
         cursor: pointer;
+
+        p{
+            margin: 1%;
+            font-size: 0.9em;
+        }
+    }
+}
+
+@media (min-width:992px){
+    #navbar{
+        padding: 4em 0 0 1.5em;
+        bottom: unset;
+        left: 0;
+        width: 15vw;
+        height: 100%;
+        flex-direction: column;
+        background-color: #2A2A2A;
+        z-index: 5;
+
+        a{
+            flex-direction: row;
+            flex-grow: 0;
+            font-size: 1.3em;
+            margin-bottom: 15%;
+            justify-content: flex-start;
+
+            p{
+                margin-left: 1vw;
+            }
+        }
     }
 }

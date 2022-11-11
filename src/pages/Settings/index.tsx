@@ -61,6 +61,11 @@ function Settings() {
         toggleEdit(!showEdit);
     };
 
+    const toggleDark = () => {
+        setIsDarkMode(!isDarkMode);
+        console.log(!isDarkMode)
+    };
+
     const revertBack = () => {
         setUsernameInfo(userInfo.userName);
         setEmailInfo(userInfo.email);
@@ -93,7 +98,7 @@ function Settings() {
             <Header />
 
             <div className={styles.switch_container}>
-                <MaterialUISwitch sx={{ m: 1 }} size="medium" defaultChecked />
+                <MaterialUISwitch sx={{ m: 1 }} size="medium" defaultChecked onClick={toggleDark} />
                 {/* <Switch color='primary'/> */}
                 <p>Dark Mode</p>
             </div>

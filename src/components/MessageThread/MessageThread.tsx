@@ -35,9 +35,9 @@ const MessageThread = ({chat}:any) => {
                 {lastMessage?.number}
               </p>
           }
-          <div className={styles.mssg_preview}>
+          <p className={styles.mssg_preview}>
             {lastMessage?.body}
-          </div>
+          </p>
 
         </div>
 

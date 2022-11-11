@@ -1,20 +1,23 @@
 #chatHeader{
+    display: flex;
     position: fixed;
+    justify-content: center;
     top: 0;
     width: 100%;
-    padding: 0.5rem;
+    height: 4.5em;
     background: var(--main-bg-color);
 
     .chatInfo{
         display:flex;
         align-items: center;
+        justify-content: center;
         flex-direction: column;
-        gap: 0.5rem;
         img{
             width: 40px;
             height: auto;
             border-radius: 100%;
             background-color: #ffffff;
+            border: 2px solid #8000FF;
         }
         p{
             margin: 0;
@@ -23,6 +26,8 @@
     }
 
     button{
+        display: flex;
+        align-items: center;
         position: absolute;
         border: none;
         outline: none;
@@ -35,6 +40,27 @@
             height: 100%;
             max-height: 40px;
             padding: 1rem;
+        }
+    }
+}
+
+@media (min-width:992px){
+    #chatHeader{
+        height: 13vh;
+        
+        .chatInfo{
+            img{
+                width: 4.3em;
+            }
+            p{
+                font-size: 1.3em;
+            }
+        }
+        button{
+            border-radius: 25px;
+            &:hover{
+                background-color: #303030;
+            }
         }
     }
 }
