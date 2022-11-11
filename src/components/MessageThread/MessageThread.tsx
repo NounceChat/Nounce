@@ -19,7 +19,7 @@ const MessageThread = ({chat}:any) => {
     if (lastMessage?.number === user?.phoneNumber) {
       setUserName('You');
       if (chat.isBatch) {
-        setUserName('Announcement by '+ userName);
+        setUserName('Announcement by You');
       }
       return
     }
