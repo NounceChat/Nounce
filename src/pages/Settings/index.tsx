@@ -218,7 +218,7 @@ function Settings() {
                 </form>
             </div>
 
-            <FormControlLabel className={styles.optIn} label="Opt In to SMS Messages" control={<Switch color='secondary' id='optIn' title="optIn" checked={isOptedIn} onChange={optInHandler} />} />
+            <FormControlLabel className={styles.optIn} label="Opt In for Announcements" control={<Switch color='secondary' id='optIn' title="optIn" checked={isOptedIn} onChange={optInHandler} />} />
 
             <div className={styles.signOut}>
                 <button onClick={logout}>Sign Out</button>

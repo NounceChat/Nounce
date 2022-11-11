@@ -139,7 +139,7 @@ function Compose() {
             { isLoading ? 
                 <div className={styles.loading}>
                     {isBatchMessage ?
-                    <h1>Sending for Batch SMS Messages...</h1>
+                    <h1>Sending Announcement ..</h1>
                     : 
                     <h1>Searching for a Chatmate...</h1>
                     }
