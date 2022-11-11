@@ -3,17 +3,49 @@ import { useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {auth} from "../../firebase-config";
+import {query, where, collection, getDocs} from 'firebase/firestore';
+import {db} from '../../firebase-config';
 
 const MessageThread = ({chat}:any) => {
   const [user] = useAuthState(auth);
   const [lastMessage, setLastMessage] = useState<any>(null);
+  const [userName, setUserName] = useState<string>('');
   useEffect(() => {
+    if (user === null) return;
+
     setLastMessage(chat.messages[chat.messages.length-1]);
-  }, [])
+    if (lastMessage === null) return;
+
+    if (lastMessage?.number === user?.phoneNumber) {
+      setUserName('You');
+      if (chat.isBatch) {
+        setUserName('Announcement by '+ userName);
+      }
+      return
+    }
+
+    const q = query(collection(db, "phones"), where("number", "==", lastMessage?.number));
+    getDocs(q).then((querySnapshot) => {
+      const name = querySnapshot.docs[0].data().userName;
+      if (chat.isBatch)
+      {
+        setUserName('Announcement by '+name);
+        return;
+      } 
+        
+      setUserName(name);
+    })
+    .catch((error) => {
+      setUserName('Anonymous');
+    })
+
+  
+  }, [user, chat, lastMessage]);
+
   const nav = useNavigate();
   const navigateToChat = () => {
-    chat.participants[0] === chat.participants[1]?
-      nav('/batch_chat/'+chat.id)
+      chat.isBatch ?
+      nav('/announcement/'+chat.id)
       :
       nav(`/chat/${chat.id}`)
   }
@@ -27,18 +59,12 @@ const MessageThread = ({chat}:any) => {
         </div>
 
         <div className={styles.name_mssg}>
-          {
-              lastMessage?.number === user?.phoneNumber?
-              <p className={styles.name}>You</p>
-              :
-              <p className={styles.name}>
-                {lastMessage?.number}
-              </p>
-          }
+          <p className={styles.name}>
+            {userName}
+          </p>
           <div className={styles.mssg_preview}>
             {lastMessage?.body}
           </div>
-
         </div>
 
         <div className={styles.time}>

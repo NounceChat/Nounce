@@ -5,7 +5,7 @@ import ChatHeader from "../../components/ChatHeader";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { useEffect, useState, useRef } from 'react';
 import { auth, db } from '../../firebase-config';
-import { doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, arrayUnion, query, getDocs, collection, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,10 +24,18 @@ function Chat() {
     const { id } = useParams<keyof MyParams>() as MyParams;
     const unsub = useEffect(() => {
         if (user === null) return;
+
         return onSnapshot(doc(db, "chats", id), (doc) => {
             if (doc.exists()) {
                 setMessages(doc.data().messages);
-                setChatMate(doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0]);
+                getDocs(query(collection(db, "phones"), where("number", "==", doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0])))
+                .then((querySnapshot) => {
+                    setChatMate(querySnapshot.docs[0].data().userName);
+                })
+                .catch((error) => {
+                    setChatMate('Anonymous');
+                    console.log("Error getting documents: ", error);
+                })
             }
         });
     }, [user, id])

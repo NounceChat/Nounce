@@ -11,6 +11,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import CircularProgress from '@mui/material/CircularProgress';
 import {httpsCallable} from 'firebase/functions';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
+import Alert from '@mui/material/Alert';
 
 function Compose() {
     const maxChar:number = 160
@@ -20,26 +21,29 @@ function Compose() {
     const [user] = useAuthState(auth);
     const [message, setMessage] = useState('')
     const [isBatchMessage, setIsBatchMessage] = useState(false);
+    const [isError, setIsError] = useState(false);
     const submitBatch = async () => {
         try{
             setIsLoading(true);
             setIsBatchMessage(true);
             const messageRef= collection(db, "phones");
-            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber), limit(1)); 
+            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber)); 
             const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                addDoc(collection(db, "batch_messages"), {
-                        to: doc.data().number,
-                        sender: user?.phoneNumber, 
-                        body: message,
-                        createdAt: new Date()
-                    });
+            const numbers = querySnapshot.docs.map(doc => doc.data().number);
+            
+            const announcements = await addDoc(collection(db, "announcements"), {
+                    recipients: numbers,
+                    sender: user?.phoneNumber, 
+                    body: message,
+                    createdAt: new Date()
             });
+            navigate(`/announcement/${announcements?.id}`);
             setMessage('');
             setIsLoading(false);
         }
         catch (e) {
             setIsLoading(false);
+            setIsError(true);
             console.error("Error adding document: ", e);
         }
     }
@@ -105,6 +109,7 @@ function Compose() {
                     //remove added doc from queueAdded
                     await deleteDoc(doc(db, "queue", queueAdded.id));
                     setIsLoading(false);
+                    setIsError(true);
         
                     console.log(e.message);
                 })
@@ -124,6 +129,13 @@ function Compose() {
     return ( 
         <div id={styles.compose}>
             <Header />
+        { isError ? 
+                <Alert severity="error" onClose={() => {setIsError(false)}}>
+                    We're having trouble finding someone around you. Please try again.
+                </Alert> 
+                : null
+            }
+
             { isLoading ? 
                 <div className={styles.loading}>
                     {isBatchMessage ?
@@ -136,7 +148,7 @@ function Compose() {
             : 
             <>
                 <div className={styles.title}>
-                    <h1>Send a Message</h1>
+                    <h1>Send a Message in your Area</h1>
                 </div>
 
                 <div className={styles.mssg_box}>
@@ -158,7 +170,7 @@ function Compose() {
                                 </button>
                             <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
                                 <FontAwesomeIcon icon={faUserGroup}/>
-                                Batch SMS
+                                Announce
                             </button>
                         </div>
                     </div>
