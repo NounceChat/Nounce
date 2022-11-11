@@ -71,15 +71,18 @@
 
 @media (min-width:992px){
     #mssg_thread{
+        margin: 0.2rem;
+
         .avatar{
             img{
-                width: 5em;
+                width: 4rem;
                 border: 0.2em solid #8000FF;
             }
         }
 
         p{
             font-size: 1.3em;
+            margin: 0;
         }
     }
 }

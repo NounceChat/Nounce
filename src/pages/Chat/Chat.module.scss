@@ -42,7 +42,7 @@
             outline: none;
             color: white;
         }
-    
+        
         button{
             min-width:40px;
             background: none;
@@ -50,6 +50,10 @@
             outline: none;
             padding: 10px;
     
+            &:hover{
+                background-color: #303030;
+            }
+
             svg{
                 height: auto;
                 width: 100%;
@@ -70,20 +74,17 @@
             padding: 3vh 2vw 2vh 17vw; 
         }
         .sendContainer{
-            justify-items: unset;
-            grid-template-columns: 1fr 310px;
-
+            right: 0;
+            width: 85vw;
             textarea{
                 font-size: 1rem;
             }
             button{
-                justify-self: flex-start;
-                border-radius: 25px;
+                border-radius: 100px;
+                margin: 5px;
+                
                 svg{
-                    width: 2.5vw;
-                }
-                &:hover{
-                    background-color: #303030;
+                    max-width: 50px;
                 }
             }
         }
