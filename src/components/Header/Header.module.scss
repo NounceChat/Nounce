@@ -30,14 +30,12 @@ header{
         
         img{
             display: none;   
-            // margin-right: 15vw;
-            // height: 10vh;
         }
 
         h1{
             display: flex;
-            font-size: 2.8em;
-            // margin-right: 15vw;
+            font-size:  clamp(1.5rem, -4.1364rem + 9.0909vw, 2rem);
+            color: #ffffff;
         }
     }
 }

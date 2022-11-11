@@ -31,7 +31,7 @@
     
         h1{
             font-weight: normal;
-            font-size: 1.3rem;
+            font-size: clamp(1.125rem, 0.9938rem + 0.75vw, 1.5rem);
             text-align: center;
         }
     }
@@ -161,7 +161,7 @@
         }
         .title{
             h1{
-                font-size: 2.5em;
+                // font-size: 2.5em;
             }
         }
         .mssg_box{
