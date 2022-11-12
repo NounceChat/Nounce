@@ -26,14 +26,14 @@ export const queueChat = functions.https.onCall(async (data, context) => {
 });
 
 // listen for new chats and filter bad words 
-export const filterBadWordsChats = functions.firestore.document("chats/{chatId}").onWrite(async (change, context) => {
+export const filterBadWordsChats = functions.firestore.document("chats/{chatId}").onUpdate(async (change, context) => {
     let hasProfanity = false
     let profaneSenders:string[] = [];
     const chat = change.after.data();
     const filter = new Filter();
     const messages = chat?.messages;
 
-    const filteredMessages = messages.map((message:any) => {
+    const filteredMessages = (messages.length>2) ? messages.map((message:any) => {
         if (message.body==null || message.body=="") return {...message, body: ""}; 
         if (filter.isProfane(message.body))
         {
@@ -43,8 +43,8 @@ export const filterBadWordsChats = functions.firestore.document("chats/{chatId}"
             return {...message, body: filteredMessage};
         }
         return message; 
-    });
-    
+    }) : messages;
+
     await change.after.ref.update({messages: filteredMessages});
 
     if (hasProfanity) {
