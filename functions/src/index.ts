@@ -35,11 +35,16 @@ export const filterBadWordsChats = functions.firestore.document("chats/{chatId}"
 
     const filteredMessages = messages.map((message:any) => {
         if (message.body==null || message.body=="") return {...message, body: ""}; 
-        if (filter.isProfane(message.body)) hasProfanity = true;
-        const filteredMessage = filter.clean(message.body)
-        profaneSenders.push(message.number);
-        return {...message, body: filteredMessage};
+        if (filter.isProfane(message.body))
+        {
+            hasProfanity = true;
+            const filteredMessage = filter.clean(message.body)
+            profaneSenders.push(message.number);
+            return {...message, body: filteredMessage};
+        }
+        return message; 
     });
+    
     await change.after.ref.update({messages: filteredMessages});
 
     if (hasProfanity) {

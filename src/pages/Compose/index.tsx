@@ -67,7 +67,7 @@ function Compose() {
         const dateNow = new Date();
 
         //wait until queue size is two or less
-        const q = query(queueRef, where("number", "==", user?.phoneNumber), limit(2));
+        const q = query(queueRef, where("number", "==", user?.phoneNumber));
         const unsubscribe1 = onSnapshot(q, (querySnapshot) => {
             if (querySnapshot.docs.length <= 2) {
                 unsubscribe1();          
@@ -91,12 +91,8 @@ function Compose() {
                                     setMessage('');
                                     setIsLoading(false);
                                     navigate(`/chat/${doc.id}`);
+                                    break;
                                 }
-                            }
-                            const new_chats:any = [];
-                            querySnapshot.forEach((doc) =>{
-                            })
-                            if (new_chats.length === 1) {
                             }
                         });
                     }
