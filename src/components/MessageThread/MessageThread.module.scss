@@ -6,7 +6,7 @@
     padding: clamp(0rem, -0.2188rem + 1.25vw, 0.625rem);
 
     &:hover{
-        background-color: #303030;
+        background-color: var(--color-group-4);
         cursor: pointer;
     }
 
@@ -34,7 +34,7 @@
 
         .name{
             font-weight: 800;
-            color: #ffffff;
+            color: var(--color-group-2);
 
             width: 30vw;
             white-space: nowrap;

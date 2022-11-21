@@ -65,12 +65,12 @@ section
         outline: none;
         padding: 1rem;
         width: 100%;
-        color: #fff;
+        color: var(--color-group-2);
         font-style: normal;
         font-weight: 500;
         font-size: 1.2rem;
         line-height: 18px;
-        background: #303030;
+        background: var(--color-group-4);
     }
 
     form {

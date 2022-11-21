@@ -27,7 +27,7 @@
         align-items: center;
         justify-items: center;
         grid-template-columns: 1fr 50px;
-        background: var(--main-bg-color);
+        background: var(--bg-color);
         
         textarea{
             font-family: 'Poppins';
@@ -36,11 +36,11 @@
             height: 100%;
             padding: 1rem;
             resize: none;
-            background: #303030;
+            background: var(--color-group-4);
             border-radius: 24px;
             border:none;
             outline: none;
-            color: white;
+            color: var(--color-group-2);
         }
         
         button{
@@ -51,7 +51,7 @@
             padding: 10px;
     
             &:hover{
-                background-color: #303030;
+                background-color: var(--color-group-4);
             }
 
             svg{

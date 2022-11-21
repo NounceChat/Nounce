@@ -23,7 +23,7 @@ function ChatHeader({chatMate}:any) {
                 <img src={avatar} title='avatar' /> 
                 <p>{chatMate}</p>
             <button onClick={() => navigate("/")}>
-                <FontAwesomeIcon icon={faChevronLeft} color="white"/>
+                <FontAwesomeIcon icon={faChevronLeft} color="var(--color-group-2)"/>
             </button>
             </div>
         </div>
