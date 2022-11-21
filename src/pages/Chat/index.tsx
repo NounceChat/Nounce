@@ -69,6 +69,13 @@ function Chat() {
         setChat('');
     }
 
+    const sendOnEnter = (e: React.KeyboardEvent<HTMLElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault
+            sendChat(e);
+        }
+      };
+
     return (
         <div id={styles.chat}>
             <ChatHeader chatMate={chatMate} />
@@ -103,6 +110,7 @@ function Chat() {
                         <TextareaAutosize
                             value={chat}
                             onChange={(e) => setChat(e.target.value)}
+                            onKeyUp = {sendOnEnter}
                             maxRows={4}
                             minRows={1}
                             placeholder="Type a message..."
