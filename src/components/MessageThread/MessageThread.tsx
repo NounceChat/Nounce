@@ -10,6 +10,7 @@ const MessageThread = ({chat}:any) => {
   const [user] = useAuthState(auth);
   const [lastMessage, setLastMessage] = useState<any>(null);
   const [userName, setUserName] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('');
   useEffect(() => {
     if (user === null) return;
 
@@ -17,11 +18,23 @@ const MessageThread = ({chat}:any) => {
     if (lastMessage === null) return;
 
     if (lastMessage?.number === user?.phoneNumber) {
-      setUserName('You');
-      if (chat.isBatch) {
+      if (chat.isBatch)
+      {
         setUserName('Announcement by You');
+        setAvatar(`https://avatars.dicebear.com/api/identicon/${chat.id}.svg`);
       }
-      return
+      else
+      {
+        const other_user = chat.participants.filter((participant:string) => participant !== user?.phoneNumber)[0];
+        const other_userName = query(collection(db, "phones"), where("number", "==", other_user));
+        let other_userName_data = "";
+        getDocs(other_userName).then((querySnapshot) => {
+          other_userName_data = querySnapshot.docs[0].data().userName;
+          setAvatar(`https://avatars.dicebear.com/api/initials/${other_userName_data}.svg`);
+        });
+        setUserName('You');
+      }
+      return;
     }
 
     const q = query(collection(db, "phones"), where("number", "==", lastMessage?.number));
@@ -30,10 +43,12 @@ const MessageThread = ({chat}:any) => {
       if (chat.isBatch)
       {
         setUserName('Announcement by '+name);
+        setAvatar(`https://avatars.dicebear.com/api/identicon/${chat.id}.svg`);
         return;
-      } 
-        
+      }
+
       setUserName(name);
+      setAvatar(`https://avatars.dicebear.com/api/initials/${name}.svg`);
     })
     .catch((error) => {
       setUserName('Anonymous');
@@ -50,7 +65,7 @@ const MessageThread = ({chat}:any) => {
       nav(`/chat/${chat.id}`)
   }
 
-  const avatar = `https://avatars.dicebear.com/api/identicon/${chat.id}.svg`
+  // const avatar = `https://avatars.dicebear.com/api/identicon/${chat.id}.svg`
 
   return (
     <div id={styles.mssg_thread} onClick={navigateToChat}>
@@ -63,7 +78,7 @@ const MessageThread = ({chat}:any) => {
             {userName}
           </p>
           <p className={styles.mssg_preview}>
-            {lastMessage?.body}
+            {lastMessage?.number === user?.phoneNumber ? `You: ${lastMessage?.body}` : lastMessage?.body}
           </p>
         </div>
 

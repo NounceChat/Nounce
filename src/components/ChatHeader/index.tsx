@@ -11,7 +11,11 @@ function ChatHeader({chatMate}:any) {
 
     const { id } = useParams<keyof MyParams>() as MyParams;
 
-    const avatar = `https://avatars.dicebear.com/api/identicon/${id}.svg`
+    // var avatar = 
+    //     isBatch == true ? `https://avatars.dicebear.com/api/identicon/${id}.svg` 
+    //     : `https://avatars.dicebear.com/api/initials/${chatMate}.svg`;
+
+    var avatar = location.pathname.includes("/announcement") ? `https://avatars.dicebear.com/api/identicon/${id}.svg` : `https://avatars.dicebear.com/api/initials/${chatMate}.svg`; 
 
     return ( 
         <div id={styles.chatHeader}>

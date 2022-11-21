@@ -28,6 +28,7 @@ function Settings() {
     const [numberInfo, setNumber] = useState("");
     const [userInfo, setUserInfo] = useState<any>(null);
     const [switchDisabled, setSwitchDisabled] = useState(true);
+    const [avatar, setAvatar] = useState<string>("");
 
     const navigate = useNavigate();
     const logout = () => {
@@ -58,10 +59,9 @@ function Settings() {
             setIsOptedIn(phone.data().isOptedIn);
             setIsDarkMode(phone.data().isDarkMode);
             setSwitchDisabled(false);
+            setAvatar(`https://avatars.dicebear.com/api/initials/${phone.data().userName}.svg`);
         });
     }, [user]);
-
-    const avatar = `https://avatars.dicebear.com/api/identicon/${user?.phoneNumber}.svg`;
 
     const allowEdit = () => {
         toggleEdit(!showEdit);
@@ -85,6 +85,7 @@ function Settings() {
             userName: usernameInfo,
             email: emailInfo,
         });
+        setAvatar(`https://avatars.dicebear.com/api/initials/${usernameInfo}.svg`);
         allowEdit();
     };
 
@@ -154,8 +155,10 @@ function Settings() {
                                 type="text"
                                 title="username"
                                 className={styles.userName}
+                                autoComplete="off"
                                 id="userName"
                                 value={validateInput(usernameInfo)}
+                                pattern="[a-zA-Z0-9_-]+"
                                 onChange={(e) => {
                                     setUsernameInfo(e.target.value);
                                 }}
