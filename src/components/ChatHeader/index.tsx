@@ -14,14 +14,14 @@ function ChatHeader({chatMate}:any) {
     // var avatar = 
     //     isBatch == true ? `https://avatars.dicebear.com/api/identicon/${id}.svg` 
     //     : `https://avatars.dicebear.com/api/initials/${chatMate}.svg`;
-
-    var avatar = location.pathname.includes("/announcement") ? `https://avatars.dicebear.com/api/identicon/${id}.svg` : `https://avatars.dicebear.com/api/initials/${chatMate}.svg`; 
+    let chatMateName = !chatMate ? "Anonymous" : chatMate;
+    let avatar = location.pathname.includes("/announcement") ? `https://avatars.dicebear.com/api/identicon/${id}.svg` : `https://avatars.dicebear.com/api/initials/${chatMateName}.svg`; 
 
     return ( 
         <div id={styles.chatHeader}>
             <div className={styles.chatInfo}>
                 <img src={avatar} title='avatar' /> 
-                <p>{chatMate}</p>
+                <p>{chatMateName}</p>
             <button onClick={() => navigate("/")}>
                 <FontAwesomeIcon icon={faChevronLeft} color="white"/>
             </button>

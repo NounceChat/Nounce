@@ -1,20 +1,20 @@
-import styles from './Compose.module.scss'; 
+import styles from './Compose.module.scss';
 import Header from "../../components/Header/Header";
 import Navbar from "../../components/Navbar/Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import {useNavigate} from "react-router-dom";
-import {auth, db, functions} from '../../firebase-config';  
-import {collection, addDoc,  query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion, deleteDoc} from 'firebase/firestore';
-import {useAuthState} from 'react-firebase-hooks/auth';
+import { useNavigate } from "react-router-dom";
+import { auth, db, functions } from '../../firebase-config';
+import { collection, addDoc, query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion, deleteDoc, runTransaction } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import CircularProgress from '@mui/material/CircularProgress';
-import {httpsCallable} from 'firebase/functions';
+import { httpsCallable } from 'firebase/functions';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Alert from '@mui/material/Alert';
 
 function Compose() {
-    const maxChar:number = 160
+    const maxChar: number = 160
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -31,21 +31,21 @@ function Compose() {
             setIsBanned(docSnap.docs[0].data().isBanned);
         });
     }, [user])
-
+    
     const submitBatch = async () => {
-        try{
+        try {
             setIsLoading(true);
             setIsBatchMessage(true);
-            const messageRef= collection(db, "phones");
-            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber)); 
+            const messageRef = collection(db, "phones");
+            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber));
             const querySnapshot = await getDocs(q);
             const numbers = querySnapshot.docs.map(doc => doc.data().number);
-            
+
             const announcements = await addDoc(collection(db, "announcements"), {
-                    recipients: numbers,
-                    sender: user?.phoneNumber, 
-                    body: message,
-                    createdAt: new Date()
+                recipients: numbers,
+                sender: user?.phoneNumber,
+                body: message,
+                createdAt: new Date()
             });
             navigate(`/announcement/${announcements?.id}`);
             setMessage('');
@@ -57,73 +57,107 @@ function Compose() {
             console.error("Error adding document: ", e);
         }
     }
+    
+    const findMatchFirstArriver = async (message: string) => {
+        try {
+            return await runTransaction(db, async (transaction) => {
+                const roomRef = doc(db, "waitingRoom", "firstArriver");
+                const docSnap = await transaction.get(roomRef);
+                
+                if (!docSnap.exists()) {
+                    const newChat = await addDoc(collection(db, "chats"), {
+                        messages: [{
+                            body: message,
+                            number: user?.phoneNumber,
+                            createdAt: new Date(),
+                            id:Math.random().toString(36).substring(7) 
+                        }],
+                        createdAt: new Date(),
+                        participants: [user?.phoneNumber],
+                    });
+                    console.log("New chat created with id: ", newChat.id);
+
+                    await transaction.set(roomRef, { 
+                        chats: [{
+                            sender: user?.phoneNumber,
+                            message: message,
+                            chat: newChat.id,
+                        }],
+                        users: [user?.phoneNumber]
+                    });
+                    return newChat.id;
+                }
+                
+                return Promise.reject( "Waiting room is already created");
+            });
+        }
+        catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    const findChatSecondArriver = async (message: string) => {
+        try {
+            return await runTransaction(db, async (transaction) => {
+                const roomRef = doc(db, "waitingRoom", 'firstArriver');
+                const docSnap = await transaction.get(roomRef);
+                if (docSnap.exists() && docSnap.data()?.users.length === 1) {
+                    const chatId = docSnap.data()?.chats[0].chat;
+                    await updateDoc(doc(db, "chats", chatId), {
+                        participants: arrayUnion(user?.phoneNumber),
+                        messages: arrayUnion({
+                            body: message,
+                            number: user?.phoneNumber,
+                            createdAt: new Date(),
+                            id:Math.random().toString(36).substring(7)
+                        })
+                    });
+                    
+                    await transaction.delete(roomRef);
+
+                    //return chat id when all operations are resovled
+                    return await  chatId;
+                }
+
+                return Promise.reject( "Waiting Room is already full");
+            });
+        }
+        catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+ 
+    const findChat = async (e: any) => {
+        const queueRef = query(collection(db, "waitingRoom"));
+        const unsubscribe = onSnapshot(queueRef, (doc) => {
+            unsubscribe();
+            const room = doc.docs[0];
+            if (!room || room === undefined) {
+                return findMatchFirstArriver(e.message);
+            } else {
+                return findChatSecondArriver(e.message);
+            }
+        })
+    }
+
     const submitSingleChat = async () => {
         setIsLoading(true);
         setIsBatchMessage(false);
-        const queueRef = collection(db, "queue");
-        const queueAdded = await addDoc(queueRef, {
-            number: user?.phoneNumber,
-        });
-        const dateNow = new Date();
 
-        //wait until queue size is two or less
-        const q = query(queueRef, where("number", "==", user?.phoneNumber));
-        const unsubscribe1 = onSnapshot(q, (querySnapshot) => {
-            if (querySnapshot.docs.length <= 2) {
-                unsubscribe1();          
-                const queueChat = httpsCallable(functions, 'queueChat');
-                queueChat({phoneNumber: user?.phoneNumber}).then((result:any) => {
-                    if (result.data == null) {
-                        // await until document is with query is created
-                        const q = query(collection(db, "chats"), where("participants", "array-contains", user?.phoneNumber));
-                        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                            for(let doc of querySnapshot.docs) {
-                                if (doc.data().createdAt.toDate() > dateNow && doc.data().participants.length == 2) {
-                                    updateDoc(doc.ref , {
-                                        messages: arrayUnion({
-                                            id: Math.random().toString(36).substring(7),
-                                            number: user?.phoneNumber,
-                                            body: message, 
-                                            createdAt: new Date(),
-                                        })
-                                    });
-                                    unsubscribe();
-                                    setMessage('');
-                                    setIsLoading(false);
-                                    navigate(`/chat/${doc.id}`);
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                    else {
-                        const chatRef = doc(db, "chats", result.data);
-                        updateDoc(chatRef, {
-                            messages: arrayUnion({
-                                id: Math.random().toString(36).substring(7),
-                                number: user?.phoneNumber,
-                                body: message, 
-                                createdAt: new Date(),
-                            })
-                        });
-                        setMessage('');
-                        navigate(`/chat/${result.data}`);
-                        setIsLoading(false);
-                    }
-                })
-                .catch(async (e) => {
-                    //remove added doc from queueAdded
-                    await deleteDoc(doc(db, "queue", queueAdded.id));
-                    setIsLoading(false);
-                    setIsError(true);
-        
-                    console.log(e.message);
-                })
-            }
-        });
+        findChat({message})
+        .then((chatId) => {
+            setMessage('');
+            setIsLoading(false);
+            navigate(`/chat/${chatId}`);
+        })
+        .catch((e) => {
+            setIsLoading(false);
+            setIsError(true);
+            console.error("Error adding document: ", e);
+        })
     }
 
-    const inputChange = (e:any) => {
+    const inputChange = (e: any) => {
         setMessage(e.target.value)
         if (e.target.value.length > maxChar || e.target.value.length === 0) {
             setBtnDisabled(true)
@@ -132,68 +166,68 @@ function Compose() {
         setBtnDisabled(false)
     }
 
-    return ( 
+    return (
         <div id={styles.compose}>
             <Header />
-        { isError ? 
-                <Alert severity="error" onClose={() => {setIsError(false)}}>
+            {isError ?
+                <Alert severity="error" onClose={() => { setIsError(false) }}>
                     We're having trouble finding someone around you. Please try again.
-                </Alert> 
+                </Alert>
                 : null
             }
 
-            { isLoading ? 
+            {isLoading ?
                 <div className={styles.loading}>
                     {isBatchMessage ?
-                    <h1>Sending Announcement ..</h1>
-                    : 
-                    <h1>Searching for a Chatmate...</h1>
+                        <h1>Sending Announcement ..</h1>
+                        :
+                        <h1>Searching for a Chatmate...</h1>
                     }
-                    <CircularProgress color="secondary"/>
+                    <CircularProgress color="secondary" />
                 </div>
-            : 
-            <>
-            { !isBanned ?
-                <div className={styles.container}>
-                    <div className={styles.title}>
-                        <h1>Send a Message in your Area</h1>
-                    </div>
+                :
+                <>
+                    {!isBanned ?
+                        <div className={styles.container}>
+                            <div className={styles.title}>
+                                <h1>Send a Message in your Area</h1>
+                            </div>
 
-                    <div className={styles.mssg_box}>
-                        <div className={styles.form}> 
-                            <TextareaAutosize
-                                value={message}
-                                onChange={inputChange}
-                                className={styles.textBox}
-                                maxLength={maxChar}
-                                minRows={2}
-                                maxRows={6}
-                                placeholder='Message'
-                            />
+                            <div className={styles.mssg_box}>
+                                <div className={styles.form}>
+                                    <TextareaAutosize
+                                        value={message}
+                                        onChange={inputChange}
+                                        className={styles.textBox}
+                                        maxLength={maxChar}
+                                        minRows={2}
+                                        maxRows={6}
+                                        placeholder='Message'
+                                    />
 
-                            <div className={styles.submit_buttons}>
-                                <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
-                                    <FontAwesomeIcon icon={faUser}/>
-                                    Single Chat
-                                    </button>
-                                <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
-                                    <FontAwesomeIcon icon={faUserGroup}/>
-                                    Announce
-                                </button>
+                                    <div className={styles.submit_buttons}>
+                                        <button disabled={btnDisabled} className={styles.submit_single} onClick={submitSingleChat}>
+                                            <FontAwesomeIcon icon={faUser} />
+                                            Single Chat
+                                        </button>
+                                        <button disabled={btnDisabled} className={styles.submit_batch} onClick={submitBatch}>
+                                            <FontAwesomeIcon icon={faUserGroup} />
+                                            Announce
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                : 
-                <div className={styles.banned}>
-                    <h3>You have been banned from using this service.</h3>
-                </div>
+                        :
+                        <div className={styles.banned}>
+                            <h3>You have been banned from using this service.</h3>
+                        </div>
+                    }
+                </>
             }
-            </>
-        }
             <Navbar />
         </div>
-     );
+    );
 }
 
 export default Compose;

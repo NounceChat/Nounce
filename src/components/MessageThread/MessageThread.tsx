@@ -17,8 +17,10 @@ const MessageThread = ({chat}:any) => {
     setLastMessage(chat.messages[chat.messages.length-1]);
     if (lastMessage === null) return;
 
+    setAvatar(`https://avatars.dicebear.com/api/initials/Anonymous.svg`);
+
     if (lastMessage?.number === user?.phoneNumber) {
-      if (chat.isBatch)
+      if (chat.isBatch )
       {
         setUserName('Announcement by You');
         setAvatar(`https://avatars.dicebear.com/api/identicon/${chat.id}.svg`);
@@ -26,10 +28,10 @@ const MessageThread = ({chat}:any) => {
       else
       {
         const other_user = chat.participants.filter((participant:string) => participant !== user?.phoneNumber)[0];
+        if (other_user === undefined) return;
         const other_userName = query(collection(db, "phones"), where("number", "==", other_user));
-        let other_userName_data = "";
         getDocs(other_userName).then((querySnapshot) => {
-          other_userName_data = querySnapshot.docs[0].data().userName;
+          const other_userName_data = querySnapshot.docs[0].data().userName;
           setAvatar(`https://avatars.dicebear.com/api/initials/${other_userName_data}.svg`);
         });
         setUserName('You');
