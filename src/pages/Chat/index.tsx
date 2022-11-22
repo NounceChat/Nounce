@@ -84,19 +84,19 @@ function Chat() {
     
     useEffect(() => {
         if (user === null) return;
-        onSnapshot(doc(db, "chats", id), (doc1) => {
+        return onSnapshot(doc(db, "chats", id), (doc1) => {
             if (doc1.exists()) {
                 if (doc1.data().participants.length === 1) {
                     setIsWaiting(true);
                     return;
                 }
-                setChatMateNumber(doc1.data().participants.filter((participant: string) => participant !== user?.phoneNumber)[0]);
+                setChatMateNumber(doc1.data().participants.filter((participant: any) => participant !== auth.currentUser?.phoneNumber)[0]);
                 setIsWaiting(false);
                 setMessages(doc1.data().messages);
 
                 getDocs(query(collection(db, "phones"), where("number", "==", chatMateNumber)))
                 .then((querySnapshot) => {
-                    setChatMate(querySnapshot.docs[0]?.data()?.userName);
+                    setChatMate(querySnapshot.docs[0]?.data().userName);
                 })
                 .catch((error) => {
                     setChatMate('Anonymous');
