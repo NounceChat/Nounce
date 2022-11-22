@@ -12,10 +12,8 @@ const MessageThread = ({chat}:any) => {
   const [userName, setUserName] = useState<string>('');
   const [avatar, setAvatar] = useState<string>('');
   useEffect(() => {
-    if (user === null) return;
-
     setLastMessage(chat.messages[chat.messages.length-1]);
-    if (lastMessage === null) return;
+    if (user === null || lastMessage === null) return;
 
     setAvatar(`https://avatars.dicebear.com/api/initials/Anonymous.svg`);
 
@@ -55,7 +53,6 @@ const MessageThread = ({chat}:any) => {
     .catch((error) => {
       setUserName('Anonymous');
     })
-
   
   }, [user, chat, lastMessage]);
 
@@ -66,8 +63,6 @@ const MessageThread = ({chat}:any) => {
       :
       nav(`/chat/${chat.id}`)
   }
-
-  // const avatar = `https://avatars.dicebear.com/api/identicon/${chat.id}.svg`
 
   return (
     <div id={styles.mssg_thread} onClick={navigateToChat}>
