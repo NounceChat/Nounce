@@ -12,6 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { httpsCallable } from 'firebase/functions';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Alert from '@mui/material/Alert';
+import * as geofire from 'geofire-common';
+
+import firebase from "firebase/compat/app"; 
+import 'firebase/compat/firestore';
 
 function Compose() {
     const maxChar: number = 160
@@ -23,33 +27,76 @@ function Compose() {
     const [isBatchMessage, setIsBatchMessage] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isBanned, setIsBanned] = useState(false);
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
 
     useEffect(() => {
         if (user === null) return;
         const q = query(collection(db, "phones"), where("number", "==", user?.phoneNumber));
+        const phone = user?.phoneNumber ? user?.phoneNumber : '';
+        const location = doc(db, "locations", phone);
+        onSnapshot(location, (doc) => {
+            if (doc.exists()) {
+                setLatitude(doc.data().lat);
+                setLongitude(doc.data().lng);
+            }
+        })
         onSnapshot(q, (docSnap) => {
             setIsBanned(docSnap.docs[0].data().isBanned);
         });
     }, [user])
 
+    const getNearbyPhones = ()
+        : Promise<string[]> => {
+        return new Promise((resolve, reject) => {
+            const nearbyPhones: string[] = [];
+            const geohash = geofire.geohashForLocation([latitude, longitude]);
+            const radiusInM = 1609.34;
+            const bounds = geofire.geohashQueryBounds([latitude, longitude], radiusInM);
+            const promises = [];
+            const db = firebase.firestore();
+            for (const b of bounds) {
+                const q:any = db.collection("locations")
+                            .orderBy('geohash')
+                            .startAt(b[0])
+                            .endAt(b[1]);    
+
+                promises.push(getDocs(q));
+            }
+            Promise.all(promises).then((snapshots) => {
+                for (const snap of snapshots) {
+                    for (const doc of snap.docs) {
+                        const location = doc.data();
+                        const distanceInM = geofire.distanceBetween([latitude, longitude], [latitude, longitude]);
+                        if (distanceInM <= radiusInM) {
+                            nearbyPhones.push(doc.id);
+                        }
+                    }
+                }
+                resolve(nearbyPhones);
+            });
+        });
+    }
+
     const submitBatch = async () => {
         try {
             setIsLoading(true);
             setIsBatchMessage(true);
-            const messageRef = collection(db, "phones");
-            const q = query(messageRef, where("isOptedIn", "==", true), where("number", "!=", user?.phoneNumber));
-            const querySnapshot = await getDocs(q);
-            const numbers = querySnapshot.docs.map(doc => doc.data().number);
-
-            const announcements = await addDoc(collection(db, "announcements"), {
-                recipients: numbers,
-                sender: user?.phoneNumber,
-                body: message,
-                createdAt: new Date()
-            });
-            navigate(`/announcement/${announcements?.id}`);
-            setMessage('');
-            setIsLoading(false);
+            // query location within a mile radius of user
+            const radiusInM = 1609.34;
+            getNearbyPhones()
+                .then(async (matchingDocs) => {
+                    return await addDoc(collection(db, "announcements"), {
+                        recipients: matchingDocs,
+                        sender: user?.phoneNumber,
+                        body: message,
+                        createdAt: new Date()
+                    });
+                }).then((announcements) => {
+                    navigate(`/announcement/${announcements?.id}`);
+                    setMessage('');
+                    setIsLoading(false);
+                })
         }
         catch (e) {
             setIsLoading(false);
