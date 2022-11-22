@@ -13,9 +13,6 @@
         }
     }
 
-    .banned{
-        text-align: center;
-    }
     
     .loading
     {
@@ -28,6 +25,16 @@
 
         h1, h3{
            text-align: center;
+        }
+    }
+
+    .blocked, .banned{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        right: 0;
+        p{
+            text-align: center;
         }
     }
 
@@ -87,7 +94,7 @@
         #chatContainer, .loading{
             padding: 3vh 2vw 2vh 17vw; 
         }
-        .sendContainer{
+        .sendContainer, .banned, .blocked{
             right: 0;
             width: 85vw;
             textarea{

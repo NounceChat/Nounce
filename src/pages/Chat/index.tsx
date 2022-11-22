@@ -84,19 +84,18 @@ function Chat() {
     
     useEffect(() => {
         if (user === null) return;
-        return onSnapshot(doc(db, "chats", id), (doc1) => {
-            if (doc1.exists()) {
-                if (doc1.data().participants.length === 1) {
+        return onSnapshot(doc(db, "chats", id), (doc) => {
+            if (doc.exists()) {
+                if (doc.data().participants.length === 1) {
                     setIsWaiting(true);
                     return;
                 }
-                setChatMateNumber(doc1.data().participants.filter((participant: any) => participant !== auth.currentUser?.phoneNumber)[0]);
                 setIsWaiting(false);
-                setMessages(doc1.data().messages);
-
-                getDocs(query(collection(db, "phones"), where("number", "==", chatMateNumber)))
+                setMessages(doc.data().messages);
+                setChatMateNumber(doc.data().participants[0] === user?.phoneNumber ? doc.data().participants[1] : doc.data().participants[0]);
+                getDocs(query(collection(db, "phones"), where("number", "==", doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0])))
                 .then((querySnapshot) => {
-                    setChatMate(querySnapshot.docs[0]?.data().userName);
+                    setChatMate(querySnapshot.docs[0].data().userName);
                 })
                 .catch((error) => {
                     setChatMate('Anonymous');
@@ -171,7 +170,7 @@ function Chat() {
                         }
                         else if (isBlocked) {
                             return (
-                                <div className={styles.banned}>
+                                <div className={styles.blocked}>
                                     <p>Chatmate is no longer in range</p>
                                 </div>
                             )
