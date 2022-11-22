@@ -169,7 +169,7 @@
         span{
             font-family: inherit;
         }
-        :nth-child(2){
+        :last-child{
             color: var(--color-group-2)
         }
     }
