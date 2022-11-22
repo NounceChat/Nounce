@@ -12,8 +12,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { httpsCallable } from 'firebase/functions';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Alert from '@mui/material/Alert';
-import * as geofire from 'geofire-common';
 
+import * as geofire from 'geofire-common';
 import firebase from "firebase/compat/app"; 
 import 'firebase/compat/firestore';
 
@@ -45,13 +45,13 @@ function Compose() {
             setIsBanned(docSnap.docs[0].data().isBanned);
         });
     }, [user])
-
+    
     const getNearbyPhones = ()
-        : Promise<string[]> => {
+    : Promise<string[]> => {
+        // query location within a mile radius of user
         return new Promise((resolve, reject) => {
             const nearbyPhones: string[] = [];
-            const geohash = geofire.geohashForLocation([latitude, longitude]);
-            const radiusInM = 1609.34;
+            const radiusInM = 1609;
             const bounds = geofire.geohashQueryBounds([latitude, longitude], radiusInM);
             const promises = [];
             const db = firebase.firestore();
@@ -66,7 +66,6 @@ function Compose() {
             Promise.all(promises).then((snapshots) => {
                 for (const snap of snapshots) {
                     for (const doc of snap.docs) {
-                        const location = doc.data();
                         const distanceInM = geofire.distanceBetween([latitude, longitude], [latitude, longitude]);
                         if (distanceInM <= radiusInM) {
                             nearbyPhones.push(doc.id);
@@ -80,10 +79,12 @@ function Compose() {
 
     const submitBatch = async () => {
         try {
+            if (latitude === 0 || longitude === 0) {
+                setIsError(true);
+                return;
+            }
             setIsLoading(true);
             setIsBatchMessage(true);
-            // query location within a mile radius of user
-            const radiusInM = 1609.34;
             getNearbyPhones()
                 .then(async (matchingDocs) => {
                     return await addDoc(collection(db, "announcements"), {
@@ -175,6 +176,11 @@ function Compose() {
     }
 
     const submitSingleChat = async () => {
+        if (latitude === 0 || longitude === 0) {
+            setIsError(true);
+            return;
+        }
+
         setIsLoading(true);
         setIsBatchMessage(false);
 
@@ -205,7 +211,7 @@ function Compose() {
             <Header />
             {isError ?
                 <Alert className={styles.error} severity="error" onClose={() => { setIsError(false) }}>
-                    We're having trouble finding someone around you. Please try again.
+                    We're having trouble finding someone around you. Please try again. Make sure you have location services enabled.
                 </Alert>
                 : null
             }
