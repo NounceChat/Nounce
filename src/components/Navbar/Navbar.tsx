@@ -8,9 +8,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   
   var iconColors:any = {
-      homeColor: (location.pathname == "/" || location.pathname.includes("/announcement") ? 'white' : 'gray'),
-      composeColor: (location.pathname == "/compose"? 'white' :'gray'),
-      settingsColor: (location.pathname == "/settings"? 'white' : 'gray')
+      homeColor: (location.pathname == "/" || location.pathname.includes("/announcement") ? '--var(--color-group-2)' : 'gray'),
+      composeColor: (location.pathname == "/compose"? '--var(--color-group-2)' :'gray'),
+      settingsColor: (location.pathname == "/settings"? '--var(--color-group-2)' : 'gray')
   }
   return (
 

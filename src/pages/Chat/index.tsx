@@ -117,7 +117,7 @@ function Chat() {
                             maxLength={160}
                         />
                         <button type="submit" >
-                            <FontAwesomeIcon icon={faPaperPlane} color="white" />
+                            <FontAwesomeIcon icon={faPaperPlane} color="var(--color-group-2)" />
                         </button>
                     </form>
                 }

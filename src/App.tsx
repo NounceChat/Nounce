@@ -7,9 +7,11 @@ import Chat from './pages/Chat';
 import BatchMessages from './pages/Chat/BatchMessages';
 import Test from './pages/Test';
 import './App.scss';
+import ThemeProvider from './components/darkMode/Theme';
 
 function App() {
   return (
+    <ThemeProvider>
     <Router>  
       <div className="App">
         <Routes>
@@ -22,6 +24,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </ThemeProvider>
   )
 }
 

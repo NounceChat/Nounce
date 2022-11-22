@@ -4,7 +4,7 @@
     width: 100%;
     height: 4em;
     box-shadow: 0 0 3px #303030;
-    background-color: rgb(18,18,18);
+    background-color: var(--bg-color);
     overflow-x: auto;
     display: flex;
 
@@ -37,7 +37,7 @@
         width: 15vw;
         height: 100%;
         flex-direction: column;
-        background-color: #2A2A2A;
+        background-color: var(--nav-color);
         z-index: 5;
         justify-content: flex-start;
 

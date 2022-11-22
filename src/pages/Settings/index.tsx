@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import styles from "./Settings.module.scss";
 import Header from "../../components/Header/Header";
@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Switch from "@mui/material/Switch";
 import { FormControlLabel } from "@mui/material";
+import {ThemeContext} from "../../components/darkMode/Theme"
 
 function Settings() {
     const [user] = useAuthState(auth);
@@ -37,6 +38,8 @@ function Settings() {
             navigate("/login");
         }
     };
+
+    const {toggleDarkMode} = useContext(ThemeContext);
 
     useEffect(() => {
         //get phone with number of user
@@ -93,10 +96,11 @@ function Settings() {
         if (input == null) return "";
         return input;
     };
-
+    
     const darkModeHandler = () => {
         setSwitchDisabled(true);
         setIsDarkMode(!isDarkMode);
+        toggleDarkMode();
         updateDoc(doc(db, "phones", userInfo.id), {
             isDarkMode: !isDarkMode,
         })
@@ -129,10 +133,10 @@ function Settings() {
             <Header />
 
             <div className={styles.container}>
-                {/* <div className={styles.switch_container}>
-                    <MaterialUISwitch sx={{ m: 1 }} size="medium" checked={isDarkMode} onChange={darkModeHandler} disabled={switchDisabled} />
+                <div className={styles.switch_container}>
+                    <MaterialUISwitch sx={{ m: 1 }} size="small" checked={isDarkMode} onChange={darkModeHandler} />
                     <p>Dark Mode</p>
-                </div> */}
+                </div>
 
                 <div className={styles.setting_avatar}>
                     <img src={avatar} alt="" />

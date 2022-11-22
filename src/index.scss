@@ -1,13 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
-  --main-bg-color: #121212;
-  --main-text-color: #BBBBBB;
-  --light-bg-color: #FFFFFF;
-  --light-text-color: rgba(48, 48, 48, 1);
+  --nav-idle: #808080;
   
-  color: var(--main-text-color); 
-  background: var(--main-bg-color);
+  --dark-group-1: #000000;
+  --dark-group-2: #FFFFFF;
+  --dark-group-3: #1E1E1E;
+  --dark-group-4: #303030;
+  --dark-text-color: #BBBBBB;
+  --dark-bg-color: #121212;
+  --dark-nav: #2A2A2A;
+
+  --light-group-1: #FFFFFF;
+  --light-group-2: #000000;
+  --light-group-3: #DEDEDE;
+  --light-group-4: #CBCBCB;
+  --light-text-color: #303030;
+  --light-bg-color: #FFFFFF;
+  --light-nav: #F1F1F1;
+  
+  
+  --color-group-1: var(--dark-group-1);
+  --color-group-2: var(--dark-group-2);
+  --color-group-3: var(--dark-group-3);
+  --color-group-4: var(--dark-group-4);
+  --text-color: var(--dark-text-color);
+  --bg-color: var(--dark-bg-color);
+  --nav-color: var(--dark-nav);  
+  
+  color: var(--text-color); 
+  background: var(--bg-color);
+  // --color-group-1: var(--light-group-1);
+  // --color-group-2: var(--light-group-2);
+  // --color-group-3: var(--light-group-3);
+  // --color-group-4: var(--light-group-4);
+  // --text-color: var(--light-text-color);
+  // --bg-color: var(--light-bg-color);
+  // --nav-bg: var(--light-nav);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
