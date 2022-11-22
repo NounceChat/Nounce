@@ -2,15 +2,21 @@ import styles from"./Navbar.module.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faGear, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import {useNavigate} from "react-router-dom";
+import { useContext } from "react";
 import Logo from "../../assets/img/logo.png"
+import { ThemeContext } from "../darkMode/Theme";
 const Navbar = () => {
   
+  const {IsDarkMode} = useContext(ThemeContext);
+
+  const UseColor:string = IsDarkMode ? "white" : "black";
+
   const navigate = useNavigate();
   
   var iconColors:any = {
-      homeColor: (location.pathname == "/" || location.pathname.includes("/announcement") ? '--var(--color-group-2)' : 'gray'),
-      composeColor: (location.pathname == "/compose"? '--var(--color-group-2)' :'gray'),
-      settingsColor: (location.pathname == "/settings"? '--var(--color-group-2)' : 'gray')
+      homeColor: (location.pathname == "/" || location.pathname.includes("/announcement") ? UseColor : 'gray'),
+      composeColor: (location.pathname == "/compose"? UseColor :'gray'),
+      settingsColor: (location.pathname == "/settings"? UseColor : 'gray')
   }
   return (
 
