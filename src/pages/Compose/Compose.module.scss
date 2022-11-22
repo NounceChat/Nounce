@@ -159,14 +159,8 @@
 
 @media (min-width:992px){
     #compose{
-        .container{
+        .container, .loading, .banned{
             padding: 3vh 2vw 2vh 17vw;
-
-        }
-        .title{
-            h1{
-                // font-size: 2.5em;
-            }
         }
         .mssg_box{
             textarea{

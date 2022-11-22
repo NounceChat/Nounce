@@ -17,6 +17,20 @@
         text-align: center;
     }
     
+    .loading
+    {
+        height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+
+        h1, h3{
+           text-align: center;
+        }
+    }
+
     .sendContainer{
         position: fixed;
         bottom: -1px;
@@ -70,7 +84,7 @@
 
 @media (min-width:992px){
     #chat{
-        #chatContainer{
+        #chatContainer, .loading{
             padding: 3vh 2vw 2vh 17vw; 
         }
         .sendContainer{

@@ -9,7 +9,7 @@ import {db} from '../../firebase-config';
 const MessageThread = ({chat}:any) => {
   const [user] = useAuthState(auth);
   const [lastMessage, setLastMessage] = useState<any>(null);
-  const [userName, setUserName] = useState<string>('');
+  const [userName, setUserName] = useState<string>('Anonymous');
   const [avatar, setAvatar] = useState<string>('');
   useEffect(() => {
     setLastMessage(chat.messages[chat.messages.length-1]);

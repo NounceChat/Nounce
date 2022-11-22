@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Navbar from '../../components/Navbar/Navbar';
+import { CircularProgress } from '@mui/material';
 
 export type MyParams = {
     id: string;
@@ -24,6 +25,7 @@ function Chat() {
     const [user] = useAuthState(auth);
     const { id } = useParams<keyof MyParams>() as MyParams;
     const [isBanned, setIsBanned] = useState(false);
+    const [isWaiting, setIsWaiting] = useState(false);
 
     useEffect(() => {
         if (user === null) return;
@@ -38,6 +40,11 @@ function Chat() {
 
         return onSnapshot(doc(db, "chats", id), (doc) => {
             if (doc.exists()) {
+                if (doc.data().participants.length === 1) {
+                    setIsWaiting(true);
+                    return;
+                }
+                setIsWaiting(false);
                 setMessages(doc.data().messages);
                 getDocs(query(collection(db, "phones"), where("number", "==", doc.data().participants.filter((user: any) => user !== auth.currentUser?.phoneNumber)[0])))
                 .then((querySnapshot) => {
@@ -79,49 +86,56 @@ function Chat() {
     return (
         <div id={styles.chat}>
             <ChatHeader chatMate={chatMate} />
-
-            <div id={styles.chatContainer}>
-                {
-                    messages && messages.length > 0 ? messages.map((message) => {
-                        if (message.number === user?.phoneNumber) {
-                            return (
-                                <div key={message.id} className={styles.bubbleContainer}>
-                                    <From message={message} />
-                                </div>
-                            )
-                        } else {
-                            return (
-                                <div key={message.id} className={styles.bubbleContainer}>
-                                    <To message={message} />
-                                </div>
-                            )
-                        }
-                    }) : <p className={styles.no_messages}>No messages</p>
-                }
-                <div ref={fieldRef}></div>
-           
-                {
-                    isBanned ?
-                    <div className={styles.banned}>
-                        <p>You are banned from sending messages</p>
-                    </div>
-                    :
-                    <form className={styles.sendContainer} onSubmit={sendChat}>
-                        <TextareaAutosize
-                            value={chat}
-                            onChange={(e) => setChat(e.target.value)}
-                            onKeyUp = {sendOnEnter}
-                            maxRows={4}
-                            minRows={1}
-                            placeholder="Type a message..."
-                            maxLength={160}
-                        />
-                        <button type="submit" >
-                            <FontAwesomeIcon icon={faPaperPlane} color="var(--color-group-2)" />
-                        </button>
-                    </form>
-                }
-            </div>
+            {
+                !isWaiting ? 
+                <div id={styles.chatContainer}>
+                    {
+                        messages && messages.length > 0 ? messages.map((message) => {
+                            if (message.number === user?.phoneNumber) {
+                                return (
+                                    <div key={message.id} className={styles.bubbleContainer}>
+                                        <From message={message} />
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div key={message.id} className={styles.bubbleContainer}>
+                                        <To message={message} />
+                                    </div>
+                                )
+                            }
+                        }) : <p className={styles.no_messages}>No messages</p>
+                    }
+                    <div ref={fieldRef}></div>
+            
+                    {
+                        isBanned ?
+                        <div className={styles.banned}>
+                            <p>You are banned from sending messages</p>
+                        </div>
+                        :
+                        <form className={styles.sendContainer} onSubmit={sendChat}>
+                            <TextareaAutosize
+                                value={chat}
+                                onChange={(e) => setChat(e.target.value)}
+                                onKeyUp = {sendOnEnter}
+                                maxRows={4}
+                                minRows={1}
+                                placeholder="Type a message..."
+                                maxLength={160}
+                            />
+                            <button type="submit" >
+                                <FontAwesomeIcon icon={faPaperPlane} color="var(--color-group-2)" />
+                            </button>
+                        </form>
+                    }
+                </div>
+                : 
+                <div className={styles.loading}>
+                    <h1>Waiting for chatmate ...</h1>
+                    <CircularProgress color="secondary" />
+                </div>
+            }
             <div className={styles.navContainer}>
                 <Navbar />
             </div>
