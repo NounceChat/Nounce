@@ -31,7 +31,7 @@ function Compose() {
             setIsBanned(docSnap.docs[0].data().isBanned);
         });
     }, [user])
-    
+
     const submitBatch = async () => {
         try {
             setIsLoading(true);
@@ -57,104 +57,91 @@ function Compose() {
             console.error("Error adding document: ", e);
         }
     }
-    
-    const findMatchFirstArriver = async (message: string) => {
-        try {
-            return await runTransaction(db, async (transaction) => {
-                const roomRef = doc(db, "waitingRoom", "firstArriver");
-                const docSnap = await transaction.get(roomRef);
-                
-                if (!docSnap.exists()) {
-                    const newChat = await addDoc(collection(db, "chats"), {
-                        messages: [{
-                            body: message,
-                            number: user?.phoneNumber,
-                            createdAt: new Date(),
-                            id:Math.random().toString(36).substring(7) 
-                        }],
-                        createdAt: new Date(),
-                        participants: [user?.phoneNumber],
-                    });
-                    console.log("New chat created with id: ", newChat.id);
 
-                    await transaction.set(roomRef, { 
-                        chats: [{
-                            sender: user?.phoneNumber,
-                            message: message,
-                            chat: newChat.id,
-                        }],
-                        users: [user?.phoneNumber]
-                    });
-                    return newChat.id;
-                }
-                
-                return Promise.reject( "Waiting room is already created");
+    const findMatchFirstArriver = async (message: string) => {
+        return await runTransaction(db, async (transaction) => {
+            const roomRef = doc(db, "waitingRoom", "firstArriver");
+            const docSnap = await transaction.get(roomRef);
+            const chatRef = await addDoc(collection(db, "chats"), {
+                messages: [{
+                    body: message,
+                    number: user?.phoneNumber,
+                    createdAt: new Date(),
+                    id: Math.random().toString(36).substring(7)
+                }],
+                createdAt: new Date(),
+                participants: [user?.phoneNumber]
             });
-        }
-        catch (e) {
-            console.error("Error adding document: ", e);
-        }
+
+            if (!docSnap.exists()) {
+                await transaction.set(roomRef, {
+                    chats: [{
+                        sender: user?.phoneNumber,
+                        message: message,
+                        chat: chatRef.id,
+                    }],
+                    users: [user?.phoneNumber]
+                });
+                return chatRef.id;
+            }
+
+            deleteDoc(chatRef);
+            return Promise.reject("Room already exists");
+        })
     }
 
     const findChatSecondArriver = async (message: string) => {
-        try {
-            return await runTransaction(db, async (transaction) => {
-                const roomRef = doc(db, "waitingRoom", 'firstArriver');
-                const docSnap = await transaction.get(roomRef);
-                if (docSnap.exists() && docSnap.data()?.users.length === 1) {
-                    const chatId = docSnap.data()?.chats[0].chat;
-                    await updateDoc(doc(db, "chats", chatId), {
-                        participants: arrayUnion(user?.phoneNumber),
-                        messages: arrayUnion({
-                            body: message,
-                            number: user?.phoneNumber,
-                            createdAt: new Date(),
-                            id:Math.random().toString(36).substring(7)
-                        })
-                    });
-                    
-                    await transaction.delete(roomRef);
+        return await runTransaction(db, async (transaction) => {
+            const roomRef = doc(db, "waitingRoom", 'firstArriver');
+            const docSnap = await transaction.get(roomRef);
+            if (docSnap.exists() && docSnap.data()?.users.length === 1) {
+                const chatId = docSnap.data()?.chats[0].chat;
+                await updateDoc(doc(db, "chats", chatId), {
+                    participants: arrayUnion(user?.phoneNumber),
+                    messages: arrayUnion({
+                        body: message,
+                        number: user?.phoneNumber,
+                        createdAt: new Date(),
+                        id: Math.random().toString(36).substring(7)
+                    })
+                });
 
-                    //return chat id when all operations are resovled
-                    return await  chatId;
-                }
-
-                return Promise.reject( "Waiting Room is already full");
-            });
-        }
-        catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
- 
-    const findChat = async (e: any) => {
-        const queueRef = query(collection(db, "waitingRoom"));
-        const unsubscribe = onSnapshot(queueRef, (doc) => {
-            unsubscribe();
-            const room = doc.docs[0];
-            if (!room || room === undefined) {
-                return findMatchFirstArriver(e.message);
-            } else {
-                return findChatSecondArriver(e.message);
+                await transaction.delete(roomRef);
+                return chatId;
             }
+
+            return Promise.reject("Waiting Room is already full");
         })
+    }
+
+    const findChat = (e: string) => {
+        return new Promise(async (resolve, reject) => {
+            const queueRef = query(collection(db, "waitingRoom"));
+            const getDocsSnap = await getDocs(queueRef)
+            const room = getDocsSnap.docs[0];
+            if (!room || room === undefined) {
+                resolve(findMatchFirstArriver(e));
+            } else {
+                resolve(findChatSecondArriver(e));
+            }
+        });
     }
 
     const submitSingleChat = async () => {
         setIsLoading(true);
         setIsBatchMessage(false);
 
-        findChat({message})
-        .then((chatId) => {
-            setMessage('');
-            setIsLoading(false);
-            navigate(`/chat/${chatId}`);
-        })
-        .catch((e) => {
-            setIsLoading(false);
-            setIsError(true);
-            console.error("Error adding document: ", e);
-        })
+        findChat(message)
+            .then((chatId) => {
+                setMessage('');
+                setIsLoading(false);
+                navigate(`/chat/${chatId}`);
+            })
+            .catch((e) => {
+                setIsLoading(false);
+                setIsError(true);
+                console.error("Error adding document: ", e);
+            })
     }
 
     const inputChange = (e: any) => {
@@ -170,7 +157,7 @@ function Compose() {
         <div id={styles.compose}>
             <Header />
             {isError ?
-                <Alert severity="error" onClose={() => { setIsError(false) }}>
+                <Alert className={styles.error} severity="error" onClose={() => { setIsError(false) }}>
                     We're having trouble finding someone around you. Please try again.
                 </Alert>
                 : null
