@@ -15,7 +15,7 @@ export const ThemeContext = React.createContext({
   toggleDarkMode: () => {},
 });
 
-export default function ThemeProvider({ children }) {
+export default function ThemeProvider({ children }:any) {
   // keeps state of the current theme
   //   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
