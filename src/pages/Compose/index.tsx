@@ -6,7 +6,7 @@ import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { auth, db } from '../../firebase-config';
-import { collection, addDoc, query, where, getDocs, onSnapshot, doc, } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, onSnapshot, doc, getDoc } from 'firebase/firestore';
 import { getDatabase, ref, set } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -46,6 +46,20 @@ function Compose() {
         });
     }, [user])
 
+    const getIsOptedIn = (id:string) =>
+    { 
+        return new Promise((resolve, reject) => {
+            const phone = doc(db, "phones", id);
+            resolve(getDoc(phone).then((doc) => {
+                if (doc.exists()) {
+                    return doc.data().isOptedIn;
+                } else {
+                    return false;
+                }
+            }))
+        })
+    }
+
     const getNearbyPhones = ()
         : Promise<string[]> => {
         // query location within a mile radius of user
@@ -63,14 +77,15 @@ function Compose() {
 
                 promises.push(getDocs(q));
             }
-            Promise.all(promises).then((snapshots) => {
+            Promise.all(promises).then(async (snapshots) => {
                 for (const snap of snapshots) {
                     for (const doc of snap.docs as Array<any>) {
                         const lat = doc.get('lat');
                         const lng = doc.get('lng');
                         const distanceInKm = geofire.distanceBetween([lat, lng], [latitude, longitude]);
                         const distanceInM = distanceInKm * 1000;
-                        if (distanceInM <= radiusInM) {
+                        const isOptedIn = await getIsOptedIn(doc.id)
+                        if (distanceInM <= radiusInM && isOptedIn) {
                             nearbyPhones.push(doc.id);
                         }
                     }

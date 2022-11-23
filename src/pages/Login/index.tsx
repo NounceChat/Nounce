@@ -4,7 +4,7 @@ import LoginImg from "../../assets/img/LogInDesk.svg";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase-config";
-import { getDocs, where, collection, addDoc, query } from "firebase/firestore";
+import { getDocs, where, collection, setDoc, query, doc} from "firebase/firestore";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -46,8 +46,9 @@ function Login() {
           );
           getDocs(myPhone).then((querySnapshot: any) => {
             if (querySnapshot.empty) {
-              addDoc(collection(db, "phones"), {
-                number: e164(phoneNumber),
+              const validatedNumber = e164(phoneNumber);
+              setDoc(doc(db, "phones", validatedNumber), {
+                number: validatedNumber,
                 isBanned: false,
                 isOptedIn: true,
                 isDarkMode: true,

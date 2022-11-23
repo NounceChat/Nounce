@@ -50,35 +50,12 @@ exports.matchmaker = functions.database.ref('matchmaking/{userId}')
 
                 //write on firestore
                 await admin.firestore().collection('chats').doc(chatId).set(chat)
-
-                await admin.firestore().collection('phones')
-                    .where("number", "==", context.params.userId)
-                    .get()
-                    .then(snapshot => {
-                        snapshot.forEach(async doc => {
-                            await admin.firestore().collection('phones').doc(doc.id).update({
-                                newChatId: chatId
-                            })
-                        })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-
-                await admin.firestore().collection('phones')
-                    .where("number", "==", secondPlayer.val().userId)
-                    .get()
-                    .then(snapshot => {
-                        snapshot.forEach(async doc => {
-                            await admin.firestore().collection('phones').doc(doc.id).update({
-                                newChatId: chatId
-                            })
-                        })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                
+                await admin.firestore().collection('phones').doc(context.params.userId).update({
+                    newChatId: chatId
+                })
+                await admin.firestore().collection('phones').doc(secondPlayer.val().userId).update({
+                    newChatId: chatId
+                })
                 //delete from matchmaking
                 await admin.database().ref('matchmaking').child(context.params.userId).remove()
                 await admin.database().ref('matchmaking').child(secondPlayer.key).remove()
