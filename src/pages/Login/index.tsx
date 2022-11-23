@@ -34,11 +34,10 @@ function Login() {
   }, [user]);
 
   const verifyOTP = (e: any) => {
-    let otp = e.target.value;
-    setOTP(otp);
-    if (otp.length === 6) {
+    e.preventDefault();
+    if (OTP.length === 6) {
       window.confirmationResult
-        .confirm(otp)
+        .confirm(OTP)
         .then((result: any) => {
           const myPhone = query(
             collection(db, "phones"),
@@ -123,13 +122,13 @@ function Login() {
       <h1>Welcome Back!</h1>
       <img src={LoginImg} alt="loginImg" className={styles.loginImg} />
       {expandForm === true ? (
-        <div className={styles.OTPContainer}>
+        <form className={styles.OTPContainer} onSubmit={verifyOTP}>
           <input
             type="number"
             maxLength={6}
             id="otpInput"
             value={OTP}
-            onChange={verifyOTP}
+            onChange={(e) => setOTP(e.target.value)}
             placeholder="Enter your OTP:"
             min="0"
             inputMode="numeric"
@@ -138,7 +137,7 @@ function Login() {
           <button type="submit">
             <p>Verify</p>
           </button>
-        </div>
+        </form>
       ) : (
         <form onSubmit={requestOTP}>
           <input

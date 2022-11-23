@@ -1,17 +1,13 @@
-import React, { useState, useLayoutEffect, Children, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export const ThemeContext = React.createContext({
-  IsDarkMode: false,
+  IsDarkMode: true,
   toggleDarkMode: () => {},
 });
 
@@ -19,20 +15,21 @@ export default function ThemeProvider({ children }:any) {
   // keeps state of the current theme
   //   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-  const [IsDarkMode, setIsDarkMode] = useState(false);
+  const [IsDarkMode, setIsDarkMode] = useState(true);
   const [user] = useAuthState(auth);
 
   useEffect(() => {
-    //get phone with number of user
     if (user === null) return;
-    const q = query(
-      collection(db, "phones"),
-      where("number", "==", user?.phoneNumber)
-    );
-    getDocs(q).then((querySnapshot) => {
-      const phone = querySnapshot.docs[0];
-    //   setUserInfo({ id: phone.id, ...phone.data() });
-      setIsDarkMode(phone.data().isDarkMode);
+    const number: string = user?.phoneNumber ? user?.phoneNumber : "";
+    const phoneRef = doc(db, "phones", number);
+    getDoc(phoneRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        setIsDarkMode(snapshot.data().isDarkMode);
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
     });
   }, [user]);
 
