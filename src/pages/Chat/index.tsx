@@ -56,7 +56,7 @@ function Chat() {
         // query location within a mile radius of user
         return new Promise((resolve, reject) => {
             const nearbyPhones: string[] = [];
-            const radiusInM = 1609.34;
+            const radiusInM = 1609;
             const bounds = geofire.geohashQueryBounds([latitude, longitude], radiusInM);
             const promises = [];
             const db = firebase.firestore();
@@ -70,8 +70,11 @@ function Chat() {
             }
             Promise.all(promises).then((snapshots) => {
                 for (const snap of snapshots) {
-                    for (const doc of snap.docs) {
-                        const distanceInM = geofire.distanceBetween([latitude, longitude], [latitude, longitude]);
+                    for (const doc of snap.docs as Array<any>) {
+                        const lat = doc.get('lat');
+                        const lng = doc.get('lng');
+                        const distanceInKm = geofire.distanceBetween([lat, lng], [latitude, longitude]);
+                        const distanceInM = distanceInKm * 1000;
                         if (distanceInM <= radiusInM) {
                             nearbyPhones.push(doc.id);
                         }

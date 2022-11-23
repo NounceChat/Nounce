@@ -65,8 +65,11 @@ function Compose() {
             }
             Promise.all(promises).then((snapshots) => {
                 for (const snap of snapshots) {
-                    for (const doc of snap.docs) {
-                        const distanceInM = geofire.distanceBetween([latitude, longitude], [latitude, longitude]);
+                    for (const doc of snap.docs as Array<any>) {
+                        const lat = doc.get('lat');
+                        const lng = doc.get('lng');
+                        const distanceInKm = geofire.distanceBetween([lat, lng], [latitude, longitude]);
+                        const distanceInM = distanceInKm * 1000;
                         if (distanceInM <= radiusInM) {
                             nearbyPhones.push(doc.id);
                         }
