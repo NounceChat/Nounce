@@ -5,16 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { auth, db, functions } from '../../firebase-config';
-import { collection, addDoc, query, where, getDocs, onSnapshot, updateDoc, limit, doc, arrayUnion, deleteDoc, runTransaction } from 'firebase/firestore';
+import { auth, db } from '../../firebase-config';
+import { collection, addDoc, query, where, getDocs, onSnapshot, doc, } from 'firebase/firestore';
+import { getDatabase, ref, set } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import CircularProgress from '@mui/material/CircularProgress';
-import { httpsCallable } from 'firebase/functions';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Alert from '@mui/material/Alert';
 
 import * as geofire from 'geofire-common';
-import firebase from "firebase/compat/app"; 
+import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
 
 function Compose() {
@@ -45,9 +45,9 @@ function Compose() {
             setIsBanned(docSnap.docs[0].data().isBanned);
         });
     }, [user])
-    
+
     const getNearbyPhones = ()
-    : Promise<string[]> => {
+        : Promise<string[]> => {
         // query location within a mile radius of user
         return new Promise((resolve, reject) => {
             const nearbyPhones: string[] = [];
@@ -56,10 +56,10 @@ function Compose() {
             const promises = [];
             const db = firebase.firestore();
             for (const b of bounds) {
-                const q:any = db.collection("locations")
-                            .orderBy('geohash')
-                            .startAt(b[0])
-                            .endAt(b[1]);    
+                const q: any = db.collection("locations")
+                    .orderBy('geohash')
+                    .startAt(b[0])
+                    .endAt(b[1]);
 
                 promises.push(getDocs(q));
             }
@@ -109,95 +109,37 @@ function Compose() {
         }
     }
 
-    const findMatchFirstArriver = async (message: string) => {
-        return await runTransaction(db, async (transaction) => {
-            const roomRef = doc(db, "waitingRoom", "firstArriver");
-            const docSnap = await transaction.get(roomRef);
-            const chatRef = await addDoc(collection(db, "chats"), {
-                messages: [{
-                    body: message,
-                    number: user?.phoneNumber,
-                    createdAt: new Date(),
-                    id: Math.random().toString(36).substring(7)
-                }],
-                createdAt: new Date(),
-                participants: [user?.phoneNumber]
-            });
-
-            if (!docSnap.exists()) {
-                await transaction.set(roomRef, {
-                    chats: [{
-                        sender: user?.phoneNumber,
-                        message: message,
-                        chat: chatRef.id,
-                    }],
-                    users: [user?.phoneNumber]
-                });
-                return chatRef.id;
-            }
-
-            deleteDoc(chatRef);
-            return Promise.reject("Room already exists");
-        })
-    }
-
-    const findChatSecondArriver = async (message: string) => {
-        return await runTransaction(db, async (transaction) => {
-            const roomRef = doc(db, "waitingRoom", 'firstArriver');
-            const docSnap = await transaction.get(roomRef);
-            if (docSnap.exists() && docSnap.data()?.users.length === 1) {
-                const chatId = docSnap.data()?.chats[0].chat;
-                await updateDoc(doc(db, "chats", chatId), {
-                    participants: arrayUnion(user?.phoneNumber),
-                    messages: arrayUnion({
-                        body: message,
-                        number: user?.phoneNumber,
-                        createdAt: new Date(),
-                        id: Math.random().toString(36).substring(7)
-                    })
-                });
-
-                await transaction.delete(roomRef);
-                return chatId;
-            }
-
-            return Promise.reject("Waiting Room is already full");
-        })
-    }
-
-    const findChat = (e: string) => {
-        return new Promise(async (resolve, reject) => {
-            const queueRef = query(collection(db, "waitingRoom"));
-            const getDocsSnap = await getDocs(queueRef)
-            const room = getDocsSnap.docs[0];
-            if (!room || room === undefined) {
-                resolve(findMatchFirstArriver(e));
-            } else {
-                resolve(findChatSecondArriver(e));
-            }
-        });
-    }
-
     const submitSingleChat = async () => {
-        if (latitude === 0 || longitude === 0) {
+        if (latitude === 0 || longitude === 0 || user === null) {
             setIsError(true);
             return;
         }
 
         setIsLoading(true);
         setIsBatchMessage(false);
+        const rtdb = getDatabase();
+        await set(ref(rtdb, 'matchmaking/' + user?.phoneNumber), {
+            chatId: 'placeholder',
+            userId: user?.phoneNumber,
+            message: message,
+        })
 
-        findChat(message)
-            .then((chatId) => {
-                setMessage('');
-                setIsLoading(false);
-                navigate(`/chat/${chatId}`);
-            })
-            .catch((e) => {
-                setIsLoading(false);
-                setIsError(true);
-                console.error("Error adding document: ", e);
-            })
+        const phoneRef = query(collection(db, "phones"), where("number", "==", user?.phoneNumber));
+
+        const unsubscribe = onSnapshot(phoneRef,
+            { includeMetadataChanges: true },
+            async (querySnapshot) => {
+                querySnapshot.docChanges().forEach(async (change) => {
+                    const chatId = change.doc.data().newChatId;
+                    if (change.type === "modified" && chatId !== null && chatId !== undefined) {
+                        setMessage('');
+                        setIsLoading(false);
+                        navigate(`/chat/${chatId}`);
+                        unsubscribe();
+                    }
+                });
+            }
+        );
     }
 
     const inputChange = (e: any) => {
