@@ -35,11 +35,11 @@
         right: 0;
         p {
             text-align: center;
+            color: var(--color-group-2);
         }
     }
     .blocked {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--isBlocked-color) 100%);
-        // background: linear-gradient(180deg, rgba(0,0,0,0) 0%,rgba(255, 75, 75, 0.5) 100%);
     }
     .banned {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(255, 75, 75, 0.5) 100%);
@@ -78,8 +78,10 @@
             outline: none;
             padding: 10px;
 
+            &:active,
             &:hover {
-                background-color: var(--color-group-4);
+                transition: all 0.4s;
+                scale: (0.90);
             }
 
             svg {

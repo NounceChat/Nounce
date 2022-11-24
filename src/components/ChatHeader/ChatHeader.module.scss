@@ -42,7 +42,8 @@
             padding: 1rem;
         }
         &:hover {
-            background-color: var(--color-group-4);
+            transition: all 0.3s;
+            scale: (0.80);
         }
     }
 }
@@ -62,7 +63,7 @@
             }
         }
         button {
-            border-radius: 100px;
+            // border-radius: 200%;
             margin: 0 1rem;
         }
     }
