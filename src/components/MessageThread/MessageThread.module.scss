@@ -1,40 +1,40 @@
-#mssg_thread{
+#mssg_thread {
     display: flex;
     flex-direction: row;
     justify-content: center;
     border-radius: 24px;
     padding: clamp(0rem, -0.2188rem + 1.25vw, 0.625rem);
 
-    &:hover{
+    &:hover {
         background-color: var(--color-group-4);
         cursor: pointer;
     }
 
-    .avatar{
+    .avatar {
         display: flex;
         width: 30%;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        
-        img{
+
+        img {
             width: 3.5em;
             min-width: 3.5em;
             min-height: 3.5em;
             border-radius: 50%;
             background-color: #ffffff;
-            border: 2px solid #8000FF;
+            border: 2px solid #8000ff;
             margin-right: 2%;
         }
     }
 
-    .name_mssg{
+    .name_mssg {
         display: flex;
         flex-direction: column;
         justify-items: left;
         width: 50vw;
 
-        .name{
+        .name {
             font-weight: 800;
             color: var(--color-group-2);
 
@@ -42,28 +42,27 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            
+
             justify-content: left;
             display: inline-block;
         }
 
-        .mssg_preview{
+        .mssg_preview {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
 
-            width: 25vw; 
+            width: 25vw;
             justify-content: left;
             display: inline-block;
-            
+
             // Fix for ellipsis
             // https://semicolon.dev/tutorial/css/text-overflow-ellipsis-doesnt-work
             // https://youtu.be/2-odCIy0KOQ
         }
     }
 
-
-    .time{
+    .time {
         display: flex;
         justify-content: flex-end;
         width: 40%;
@@ -71,20 +70,20 @@
     }
 }
 
-@media (min-width:992px){
-    #mssg_thread{
+@media (min-width: 992px) {
+    #mssg_thread {
         margin: 0.2rem;
 
-        .avatar{
-            img{
+        .avatar {
+            img {
                 width: 4rem;
                 min-width: 4rem;
                 min-height: 4rem;
-                border: 0.2em solid #8000FF;
+                border: 0.2em solid #8000ff;
             }
         }
 
-        p{
+        p {
             font-size: 1.3em;
             margin: 0;
         }

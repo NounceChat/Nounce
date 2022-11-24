@@ -1,8 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import {
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -11,7 +8,7 @@ export const ThemeContext = React.createContext({
   toggleDarkMode: () => {},
 });
 
-export default function ThemeProvider({ children }:any) {
+export default function ThemeProvider({ children }: any) {
   // keeps state of the current theme
   //   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -23,14 +20,14 @@ export default function ThemeProvider({ children }:any) {
     const number: string = user?.phoneNumber ? user?.phoneNumber : "";
     const phoneRef = doc(db, "phones", number);
     getDoc(phoneRef)
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        setIsDarkMode(snapshot.data().isDarkMode);
-      }
-    })
-    .catch((error) => {
-      console.log("Error getting document:", error);
-    });
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setIsDarkMode(snapshot.data().isDarkMode);
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
   }, [user]);
 
   // paints the app before it renders elements

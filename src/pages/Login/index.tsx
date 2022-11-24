@@ -4,7 +4,14 @@ import LoginImg from "../../assets/img/LogInDesk.svg";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase-config";
-import { getDocs, where, collection, setDoc, query, doc} from "firebase/firestore";
+import {
+  getDocs,
+  where,
+  collection,
+  setDoc,
+  query,
+  doc,
+} from "firebase/firestore";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -143,10 +150,7 @@ function Login() {
           <input
             onChange={(e: any) => setPhoneNumber(e.target.value)}
             placeholder="Phone Number"
-            type="number"
-            min="0"
-            inputMode="numeric"
-            pattern="[0-9]*"
+            type="tel"
           />
           <button type="submit">
             <p>Sign In</p>
