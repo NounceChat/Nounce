@@ -145,12 +145,14 @@ function Compose() {
             { includeMetadataChanges: true },
             async (querySnapshot) => {
                 querySnapshot.docChanges().forEach(async (change) => {
-                    const chatId = change.doc.data().newChatId;
-                    if (change.type === "modified" && chatId !== null && chatId !== undefined) {
-                        setMessage('');
-                        setIsLoading(false);
-                        navigate(`/chat/${chatId}`);
-                        unsubscribe();
+                    if (change.doc.exists()) {
+                        const chatId = change.doc.data().newChatId;
+                        if (change.type === "modified" && chatId) {
+                            setMessage('');
+                            setIsLoading(false);
+                            navigate(`/chat/${chatId}`);
+                            unsubscribe();
+                        }
                     }
                 });
             }

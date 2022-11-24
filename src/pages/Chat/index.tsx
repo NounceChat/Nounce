@@ -10,10 +10,8 @@ import {
     onSnapshot,
     updateDoc,
     arrayUnion,
-    query,
     getDocs,
-    collection,
-    where,
+    getDoc,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams } from "react-router-dom";
@@ -41,31 +39,8 @@ function Chat() {
     const [isBanned, setIsBanned] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
-    const [chatMateNumber, setChatMateNumber] = useState("");
-    // const [prevChat, setPrevChat] = useState(new Date());
 
-    useEffect(() => {
-        if (user === null) return;
-        const q = query(
-            collection(db, "phones"),
-            where("number", "==", user?.phoneNumber)
-        );
-        const phone = user?.phoneNumber ? user?.phoneNumber : "";
-        const location = doc(db, "locations", phone);
-        onSnapshot(location, (doc) => {
-            if (doc.exists()) {
-                setLatitude(doc.data().lat);
-                setLongitude(doc.data().lng);
-            }
-        });
-        onSnapshot(q, (docSnap) => {
-            setIsBanned(docSnap.docs[0].data().isBanned);
-        });
-    }, [user]);
-
-    const getNearbyPhones = (): Promise<string[]> => {
+    const getNearbyPhones = (latitude:any, longitude:any): Promise<string[]> => {
         // query location within a mile radius of user
         return new Promise((resolve, reject) => {
             const nearbyPhones: string[] = [];
@@ -104,43 +79,68 @@ function Chat() {
             });
         });
     };
+    
+    const getLocation = async (phone:string) => {
+        const location = doc(db, "locations", phone);
+        return new Promise((resolve, reject) => {
+            const unsubscribe = onSnapshot(location, (snapshot) => {
+                const data = snapshot.data();
+                unsubscribe();
+                resolve(data);
+            })
+        });
+    };
 
     useEffect(() => {
         if (user === null) return;
-        return onSnapshot(doc(db, "chats", id), (doc) => {
-            if (doc.exists()) {
-                if (doc.data().participants.length === 1) {
+        const phone = user?.phoneNumber ? user?.phoneNumber : "";
+        const q = doc(db, 'phones', phone);
+        
+        onSnapshot(q, (docSnap) => {
+            if (docSnap.exists()) {
+                setIsBanned(docSnap.data().isBanned);
+            }
+        });
+
+        onSnapshot(doc(db, "chats", id), (snapshot) => {
+            if (snapshot.exists()) {
+                if (snapshot.data().participants.length === 1) {
                     setIsWaiting(true);
                     return;
                 }
                 setIsWaiting(false);
-                setMessages(doc.data().messages);
-                setChatMateNumber(
-                    doc.data().participants[0] === user?.phoneNumber
-                        ? doc.data().participants[1]
-                        : doc.data().participants[0]
-                );
-                getDocs(
-                    query(
-                        collection(db, "phones"),
-                        where(
-                            "number",
-                            "==",
-                            doc
-                                .data()
-                                .participants.filter(
-                                    (user: any) => user !== auth.currentUser?.phoneNumber
-                                )[0]
-                        )
-                    )
-                )
-                    .then((querySnapshot) => {
-                        setChatMate(querySnapshot.docs[0].data().userName);
+                setMessages(snapshot.data().messages);
+                const otheruser = snapshot.data().participants[0] === user?.phoneNumber
+                        ? snapshot.data().participants[1]
+                        : snapshot.data().participants[0]
+
+                getDoc(doc(db, 'phones', otheruser))
+                .then((doc) => {
+                    if (doc.exists()) {
+                        setChatMate(doc?.data()?.userName);
+                    }
+                })
+                .catch((error) => {
+                    setChatMate("Anonymous");
+                    console.log("Error getting document:", error);
+                });
+                
+                getLocation(phone).then((location:any) => {
+                    return { lat: location.lat, lng: location.lng };
+                })
+                .then((data) => {
+                    getNearbyPhones(data.lat, data.lng).then((phones) => {
+                        console.log(phones);
+                        if (phones.includes(otheruser)) {
+                            setIsBlocked(false);
+                        } else {
+                            setIsBlocked(true);
+                        }
                     })
-                    .catch((error) => {
-                        setChatMate("Anonymous");
-                        console.log("Error getting documents: ", error);
-                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             }
         });
     }, [user, id]);
@@ -152,11 +152,6 @@ function Chat() {
     const sendChat = async (e: any) => {
         e.preventDefault();
         if (user === null || chat.length === 0) return;
-        const nearbyPhones = await getNearbyPhones();
-        if (!nearbyPhones.includes(chatMateNumber)) {
-            setIsBlocked(true);
-            return;
-        }
         updateDoc(doc(db, "chats", id), {
             messages: arrayUnion({
                 id: Math.random().toString(36).substring(7),
@@ -180,23 +175,6 @@ function Chat() {
             <ChatHeader chatMate={chatMate} />
             {!isWaiting ? (
                 <div id={styles.chatContainer}>
-                    {/* for every date that has a message, display chatDate */}
-                    {/* maybe map messages and add conditions if there is a message for that
-                    day, add the date, if not, no display */}
-
-                    {/* {
-                        messages && messages.length > 0 ? messages.map((message) => {
-                            if (message) {
-                                return (
-
-
-                                    <div key={message.id}>
-                                        <ChatDate chatDate={message?.createdAt.toDate()}/>
-                                    </div>
-                                )
-                            }
-                        }) : <p></p>
-                    } */}
 
                     {messages && messages.length > 0 ? (
                         messages.map((message, i, arr) => {
@@ -239,7 +217,6 @@ function Chat() {
                                     </div>
                                 );
                             }
-                            // setPrevChat(new Date(message?.createdAt.toDate()));
                         })
                     ) : (
                         <p className={styles.no_messages}>No messages</p>

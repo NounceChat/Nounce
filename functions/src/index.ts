@@ -1,13 +1,19 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 admin.initializeApp();
-const Filter = require('bad-words');
-const database = admin.database();
 
 exports.matchmaker = functions.database.ref('matchmaking/{userId}')
     .onCreate((snap, context) => {
+        const database = admin.database();
+        // Generates new Chat ID
+        const generateChatId = () => {
+            var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var chatId = "";
+            for (let j = 0; j < 20; j++) chatId += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+            return chatId;
+        }
 
-        var chatId = generateChatId();
+        const chatId = generateChatId();
 
         database.ref('matchmaking').once('value').then(users => {
             let secondPlayer: any = null;
@@ -26,7 +32,7 @@ exports.matchmaker = functions.database.ref('matchmaking/{userId}')
                 matchmaking[context.params.userId].chatId = chatId;
                 matchmaking[secondPlayer.key].chatId = chatId;
                 return matchmaking;
-            }).then(async(result) => {
+            }).then(async (result) => {
                 if (result.snapshot.child(context.params.userId).val().chatId !== chatId) return;
 
                 const chat = {
@@ -69,16 +75,9 @@ exports.matchmaker = functions.database.ref('matchmaking/{userId}')
         });
     });
 
-// Generates new Chat ID
-const generateChatId = () => {
-    var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var chatId = "";
-    for (let j = 0; j < 20; j++) chatId += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-    return chatId;
-}
-
 // listen for new announcements and filter bad words
 export const filterBadWordsAnnouncements = functions.firestore.document("announcements/{announcementId}").onCreate(async (snap, context) => {
+    const Filter = await require('bad-words');
     const announcement = snap.data();
     const filter = new Filter();
     const announcementText = announcement?.body
@@ -97,6 +96,5 @@ export const filterBadWordsAnnouncements = functions.firestore.document("announc
                 }
             })
     }
-
     return null;
 });
