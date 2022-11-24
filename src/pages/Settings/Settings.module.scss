@@ -145,7 +145,7 @@
             &:hover {
                 transition: 0.2s all ease-out;
                 scale: (0.97);
-                background: #3a3a3a;
+                background: var(--nav-color);
             }
         }
 
