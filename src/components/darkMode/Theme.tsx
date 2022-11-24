@@ -86,6 +86,7 @@ const lightTheme = [
   "--text-color: var(--light-text-color)",
   "--bg-color: var(--light-bg-color)",
   "--nav-color: var(--light-nav)",
+  "--isBlocked-color: var(--light-isBlocked)",
 ];
 
 const darkTheme = [
@@ -96,4 +97,5 @@ const darkTheme = [
   "--text-color: var(--dark-text-color)",
   "--bg-color: var(--dark-bg-color)",
   "--nav-color: var(--dark-nav)",
+  "--isBlocked-color: var(--dark-isBlocked)",
 ];

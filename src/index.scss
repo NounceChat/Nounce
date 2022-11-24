@@ -10,6 +10,7 @@
   --dark-text-color: #BBBBBB;
   --dark-bg-color: #121212;
   --dark-nav: #2A2A2A;
+  --dark-isBlocked: rgba(55, 55, 55, 0.5);
 
   --light-group-1: #FFFFFF;
   --light-group-2: #000000;
@@ -18,6 +19,7 @@
   --light-text-color: #303030;
   --light-bg-color: #FFFFFF;
   --light-nav: #F1F1F1;
+  --light-isBlocked: rgba(35, 35, 35, 0.5);
   
   
   --color-group-1: var(--dark-group-1);
@@ -26,7 +28,8 @@
   --color-group-4: var(--dark-group-4);
   --text-color: var(--dark-text-color);
   --bg-color: var(--dark-bg-color);
-  --nav-color: var(--dark-nav);  
+  --nav-color: var(--dark-nav);
+  --isBlocked-color: var(--dark-isBlocked);
   
   color: var(--text-color); 
   background: var(--bg-color);

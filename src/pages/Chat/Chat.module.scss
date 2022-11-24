@@ -37,6 +37,13 @@
             text-align: center;
         }
     }
+    .blocked{
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--isBlocked-color) 100%);
+        // background: linear-gradient(180deg, rgba(0,0,0,0) 0%,rgba(255, 75, 75, 0.5) 100%);
+    }
+    .banned{
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%,rgba(255, 75, 75, 0.5) 100%);
+    }
 
     .sendContainer{
         position: fixed;
