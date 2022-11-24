@@ -66,19 +66,21 @@ function BatchMessages() {
                     messages && messages.length > 0 ? messages.map((message) => {
                         if (message.number === user?.phoneNumber) {
                             return (
-                                <div>
+                                <div key={message.id}>
                                     <ChatDate chatDate={message?.createdAt.toDate()}/>
-                                    <div key={message.id} className={styles.bubbleContainer}>
+                                    <div className={styles.bubbleContainer}>
                                         <From message={message} />
                                     </div>
                                 </div>
                             )
                         } else {
                             return (
-                                <div key={message.id} className={styles.bubbleContainer}>
-                                    <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                <div key={message.id}>
+                                <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                <div className={styles.bubbleContainer}>
                                     <To message={message} />
                                 </div>
+                            </div>
                             )
                         }
                     }) : <p className={styles.no_messages}>No messages</p>

@@ -91,9 +91,9 @@
                     font-family: inherit;
                     font-weight: 500;
     
-                    &:focus,
-                    &:active,
-                    &:hover {
+                    &:focus:enabled,
+                    &:active:enabled,
+                    &:hover:enabled {
                         outline: none;
                         border-bottom-color: #8000FF;
                     }
