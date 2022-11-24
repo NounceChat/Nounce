@@ -1,27 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 :root {
   --nav-idle: #808080;
-  
+
   --dark-group-1: #000000;
-  --dark-group-2: #FFFFFF;
-  --dark-group-3: #1E1E1E;
+  --dark-group-2: #ffffff;
+  --dark-group-3: #1e1e1e;
   --dark-group-4: #303030;
-  --dark-text-color: #BBBBBB;
+  --dark-text-color: #bbbbbb;
   --dark-bg-color: #121212;
-  --dark-nav: #2A2A2A;
+  --dark-nav: #2a2a2a;
   --dark-isBlocked: rgba(55, 55, 55, 0.5);
 
-  --light-group-1: #FFFFFF;
+  --light-group-1: #ffffff;
   --light-group-2: #000000;
-  --light-group-3: #DEDEDE;
-  --light-group-4: #CBCBCB;
+  --light-group-3: #dedede;
+  --light-group-4: #cbcbcb;
   --light-text-color: #303030;
-  --light-bg-color: #FFFFFF;
-  --light-nav: #F1F1F1;
+  --light-bg-color: #ffffff;
+  --light-nav: #f1f1f1;
   --light-isBlocked: rgba(35, 35, 35, 0.5);
-  
-  
+
   --color-group-1: var(--dark-group-1);
   --color-group-2: var(--dark-group-2);
   --color-group-3: var(--dark-group-3);
@@ -30,8 +29,8 @@
   --bg-color: var(--dark-bg-color);
   --nav-color: var(--dark-nav);
   --isBlocked-color: var(--dark-isBlocked);
-  
-  color: var(--text-color); 
+
+  color: var(--text-color);
   background: var(--bg-color);
   // --color-group-1: var(--light-group-1);
   // --color-group-2: var(--light-group-2);
@@ -49,10 +48,10 @@
 }
 
 * {
-  box-sizing:border-box;
+  box-sizing: border-box;
   user-select: none;
-  -moz-box-sizing:border-box;
-  -webkit-box-sizing:border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
@@ -63,7 +62,7 @@
 
 body,
 html {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   overflow-x: hidden;
   scrollbar-width: thin;
   width: 100%;
@@ -73,19 +72,20 @@ html {
 
 ::-webkit-scrollbar {
   width: 5px;
-  background:transparent;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(171,171,171);
+  background: rgb(171, 171, 171);
   -webkit-border-radius: 2ex;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
-input,textarea{
+input,
+textarea {
   -webkit-user-select: text; /* Chrome, Opera, Safari */
   -moz-user-select: text; /* Firefox 2+ */
   -ms-user-select: text; /* IE 10+ */

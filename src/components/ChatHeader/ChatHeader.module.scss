@@ -1,4 +1,4 @@
-#chatHeader{
+#chatHeader {
     display: flex;
     position: fixed;
     justify-content: center;
@@ -6,26 +6,26 @@
     width: 100%;
     height: 4.5em;
     background: var(--bg-color);
-    
-    .chatInfo{
-        display:flex;
+
+    .chatInfo {
+        display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        img{
+        img {
             width: 40px;
             height: auto;
             border-radius: 100%;
             background-color: #ffffff;
-            border: 2px solid #8000FF;
+            border: 2px solid #8000ff;
         }
-        p{
+        p {
             margin: 0;
             font-weight: 500;
         }
     }
-    
-    button{
+
+    button {
         display: flex;
         align-items: center;
         position: absolute;
@@ -35,35 +35,35 @@
         left: 0;
         top: 0;
         height: 100%;
-        
-        svg{
+
+        svg {
             height: 100%;
             max-height: 40px;
             padding: 1rem;
         }
-        &:hover{
+        &:hover {
             background-color: var(--color-group-4);
         }
     }
 }
 
-@media (min-width:992px){
-    #chatHeader{
+@media (min-width: 992px) {
+    #chatHeader {
         height: 13vh;
         left: 15vw;
-        .chatInfo{
+        .chatInfo {
             margin-right: 15vw;
-            img{
+            img {
                 width: 45px;
-                border: 0.2em solid #8000FF;
+                border: 0.2em solid #8000ff;
             }
-            p{
+            p {
                 font-size: 1rem;
             }
         }
-        button{
+        button {
             border-radius: 100px;
-            margin: 0 1rem; 
+            margin: 0 1rem;
         }
     }
 }

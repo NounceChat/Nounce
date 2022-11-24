@@ -1,4 +1,4 @@
-header{
+header {
     position: fixed;
     display: flex;
     top: 0;
@@ -10,31 +10,31 @@ header{
 
     z-index: 2;
 
-    img{
+    img {
         display: flex;
         height: 3.5em;
         width: auto;
         position: absolute;
     }
 
-    h1{
+    h1 {
         display: none;
     }
 }
 
-@media (min-width:992px){
-    header{
+@media (min-width: 992px) {
+    header {
         margin-left: 50vw;
         justify-content: flex-start;
         height: 13vh;
-        
-        img{
-            display: none;   
+
+        img {
+            display: none;
         }
 
-        h1{
+        h1 {
             display: flex;
-            font-size:  clamp(1.5rem, -4.1364rem + 9.0909vw, 2rem);
+            font-size: clamp(1.5rem, -4.1364rem + 9.0909vw, 2rem);
             color: var(--color-group-2);
         }
     }

@@ -1,5 +1,4 @@
-section
-{
+section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,35 +6,35 @@ section
     height: 100vh;
     padding: 0 1rem;
 
-    .logoContainer{
+    .logoContainer {
         img {
             width: 10rem;
             height: 10rem;
         }
-        h1{
-          display: none;  
+        h1 {
+            display: none;
         }
     }
 
-    h1{
+    h1 {
         line-height: 36px;
     }
 
-    .intro_message{
+    .intro_message {
         display: none;
     }
 
-    .loginImg{
+    .loginImg {
         display: none;
     }
 
-    .description{
+    .description {
         display: none;
     }
 
     button {
         cursor: pointer;
-        background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+        background: linear-gradient(180deg, #c000fe 0%, #8000ff 100%);
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         border-radius: 24px;
         border: none;
@@ -51,15 +50,15 @@ section
     button:hover {
         transition: 0.2s all ease-out;
         scale: (0.97);
-        background: linear-gradient(180deg, #8000FF 0%, #C000FE 100%);
+        background: linear-gradient(180deg, #8000ff 0%, #c000fe 100%);
     }
 
     button:active {
         transition: 0.2s all ease-out;
-        background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+        background: linear-gradient(180deg, #c000fe 0%, #8000ff 100%);
     }
 
-    input{
+    input {
         border-radius: 24px;
         border: none;
         outline: none;
@@ -78,24 +77,24 @@ section
     }
 }
 
-@media (min-width:992px){
-    section{
+@media (min-width: 992px) {
+    section {
         justify-content: unset;
         padding: 7vh 7vw 0 7vw;
         align-items: unset;
 
-        .logoContainer{
+        .logoContainer {
             display: flex;
             align-items: center;
-            img{
+            img {
                 align-self: flex-start;
                 height: 4em;
                 width: 4em;
             }
 
-            h1{
+            h1 {
                 display: block;
-                color: #BB01F3;
+                color: #bb01f3;
                 font-size: 2rem;
                 font-weight: 700;
                 text-align: center;
@@ -103,17 +102,16 @@ section
             }
         }
 
-        h1{
+        h1 {
             display: none;
         }
 
-        
-        .intro_container{
+        .intro_container {
             display: flex;
             width: 30em;
         }
 
-        .loginImg{
+        .loginImg {
             display: block;
             position: absolute;
             top: 16vh;
@@ -122,38 +120,39 @@ section
             height: 40vw;
         }
 
-        .description{
+        .description {
             display: block;
             margin-bottom: 5%;
         }
-        
-        p{
+
+        p {
             width: 30em;
             font-size: 1.1em;
         }
-        
-        .intro_message{
+
+        .intro_message {
             display: flex;
             font-size: 3em;
-            color: #BB01F3;
+            color: #bb01f3;
             line-height: 7vh;
         }
 
-        form, .OTPContainer{
+        form,
+        .OTPContainer {
             max-width: 300px;
-            button{
+            button {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
                 width: 100%;
                 height: 30%;
-    
-                p{
+
+                p {
                     font-size: 0.9em;
                 }
             }
-            input{
+            input {
                 font-size: 1.2em;
                 margin-bottom: 2%;
                 width: 100%;

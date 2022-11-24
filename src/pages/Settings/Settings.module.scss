@@ -1,13 +1,13 @@
-#settings{
+#settings {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
-    
-    .container{
-        padding: 5em 1em 5em 1em;   
+
+    .container {
+        padding: 5em 1em 5em 1em;
         display: flex;
         flex-direction: column;
         justify-items: center;
@@ -15,7 +15,7 @@
         overflow-y: scroll;
     }
 
-    .switch_container{
+    .switch_container {
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -24,43 +24,43 @@
 
         z-index: 1;
 
-        p{
+        p {
             font-weight: 500;
             color: var(--text-color);
         }
     }
 
-    .setting_avatar{
+    .setting_avatar {
         display: flex;
-        background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+        background: linear-gradient(180deg, #c000fe 0%, #8000ff 100%);
         border-radius: 50%;
         padding: 5px;
-        img{
+        img {
             width: 6rem;
             border-radius: 50%;
         }
     }
 
-    .setting_name{
+    .setting_name {
         display: flex;
-        h3{
+        h3 {
             font-weight: 500;
             font-size: 1.6em;
         }
     }
 
-    .userInfo{
+    .userInfo {
         display: flex;
         width: 100%;
 
-        form{
+        form {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             width: 100%;
-            
-            .inputFields{
+
+            .inputFields {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -71,61 +71,56 @@
                 height: 12em;
                 margin-bottom: 3%;
 
-
-                label{
+                label {
                     display: flex;
-                    align-items:flex-start;
+                    align-items: flex-start;
                     font-weight: 500;
                     font-size: 0.8em;
                 }
-    
-                input{
+
+                input {
                     display: flex;
                     width: 100%;
                     background-color: inherit;
                     border: none;
                     border-bottom: 0.5px solid #303030;
                     margin-bottom: 2%;
-    
+
                     color: var(--color-group-2);
                     font-family: inherit;
                     font-weight: 500;
-    
+
                     &:focus:enabled,
                     &:active:enabled,
                     &:hover:enabled {
                         outline: none;
-                        border-bottom-color: #8000FF;
+                        border-bottom-color: #8000ff;
                     }
-                    &:disabled{
+                    &:disabled {
                         border-bottom-color: --color-group-4;
                     }
-                    &:invalid{
+                    &:invalid {
                         border-bottom-color: #ff3b3b;
                     }
                 }
-                .userName{
-                        
+                .userName {
                 }
-                .Email{
-        
+                .Email {
                 }
-                .phoneNumber{
+                .phoneNumber {
                     border-bottom: none;
                 }
             }
-
-
         }
     }
 
-    .setting_buttons{
+    .setting_buttons {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
         margin-bottom: 2.5em;
 
-        button{
+        button {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -149,42 +144,42 @@
             }
         }
 
-        .edit{
+        .edit {
             background-color: var(--color-group-3);
         }
-        .cancel{
+        .cancel {
             background-color: transparent;
             box-shadow: none;
         }
-        .save{
-            background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
-            &:hover{
-                background: linear-gradient(180deg, #8000FF 0%, #C000FE 100%);
+        .save {
+            background: linear-gradient(180deg, #c000fe 0%, #8000ff 100%);
+            &:hover {
+                background: linear-gradient(180deg, #8000ff 0%, #c000fe 100%);
             }
-        }
-    }   
-
-    .optIn{
-        margin-bottom: 2.5em;
-        span{
-            font-family: inherit;
-        }
-        :last-child{
-            color: var(--color-group-2)
         }
     }
 
-    .signOut{
+    .optIn {
+        margin-bottom: 2.5em;
+        span {
+            font-family: inherit;
+        }
+        :last-child {
+            color: var(--color-group-2);
+        }
+    }
+
+    .signOut {
         display: flex;
-        button{
+        button {
             align-items: center;
             justify-content: center;
-    
+
             color: var(--color-group-2);
             font-family: inherit;
             font-weight: 400;
             cursor: pointer;
-    
+
             border: none;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 24px;
@@ -195,7 +190,7 @@
 
             margin-bottom: 3%;
 
-            &:hover{
+            &:hover {
                 transition: 0.2s all ease-out;
                 scale: (0.97);
                 background: #ee6060;
@@ -204,73 +199,73 @@
     }
 }
 
-@media (min-width:992px){
-    #settings{
+@media (min-width: 992px) {
+    #settings {
         height: 100vh;
         padding: unset;
-        
-        .container{
+
+        .container {
             width: 100vw;
             padding: 13vh 2vw 0vh 17vw;
         }
 
-        .switch_container{
+        .switch_container {
             align-items: center;
             max-width: 40vw;
             transform: scale(1.1);
         }
 
-        .setting_avatar{
-            img{
+        .setting_avatar {
+            img {
                 width: 8rem;
                 height: auto;
             }
         }
 
-        .setting_name{
+        .setting_name {
             height: 7vh;
             align-items: center;
-            h3{
+            h3 {
                 font-size: 2em;
             }
         }
 
-        .userInfo{
-            form{
-                .inputFields{
+        .userInfo {
+            form {
+                .inputFields {
                     width: 30vw;
                     height: 30vh;
                     padding: 0% 2%;
-                    label{
+                    label {
                         font-size: 1em;
                     }
-                    input{
+                    input {
                         font-size: 0.9em;
                     }
                 }
             }
         }
 
-        .setting_buttons{
+        .setting_buttons {
             margin-bottom: 2.5vh;
-            button{
+            button {
                 width: 10em;
                 height: 2.5em;
                 font-size: 1em;
             }
         }
 
-        .optIn{
-            span{
+        .optIn {
+            span {
                 font-size: 1.2em;
                 font-family: inherit;
                 font-weight: 500;
                 color: #ffffff;
             }
         }
-        
-        .signOut{
-            button{
+
+        .signOut {
+            button {
                 width: 10em;
                 height: 2.5em;
                 font-size: 1em;

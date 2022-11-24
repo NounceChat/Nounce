@@ -1,8 +1,8 @@
 import firebase from 'firebase/compat/app';
-import { getAuth} from "firebase/auth";
-import {getFirestore} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
-import {getFunctions, connectFunctionsEmulator} from "firebase/functions";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYTzIuKbZYB14ZBIuYBS9a-o_QaGfrsqU",
@@ -22,4 +22,4 @@ export const db = getFirestore(app);
 export const database = getDatabase(app);
 let functions = getFunctions(app);
 // connectFunctionsEmulator(functions, "localhost", 5001);
-export {functions};
+export { functions };
