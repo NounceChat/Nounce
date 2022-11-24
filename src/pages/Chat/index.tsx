@@ -210,7 +210,7 @@ function Chat() {
                                     <div key={message.id}>
                                         {prevChat.getTime() -
                                             message?.createdAt.toDate().getTime() >
-                                            3600 * 1000 ? (
+                                            86400 * 1000 ? (
                                             <ChatDate
                                                 chatDate={message?.createdAt.toDate()}
                                             />
@@ -227,7 +227,7 @@ function Chat() {
                                         {Math.abs(
                                             prevChat.getTime() - message?.createdAt.toDate().getTime()
                                         ) >
-                                            3600 * 1000 ? (
+                                            86400 * 1000 ? (
                                             <ChatDate
                                                 chatDate={message?.createdAt.toDate()}
                                             />
