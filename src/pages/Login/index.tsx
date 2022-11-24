@@ -143,10 +143,7 @@ function Login() {
           <input
             onChange={(e: any) => setPhoneNumber(e.target.value)}
             placeholder="Phone Number"
-            type="number"
-            min="0"
-            inputMode="numeric"
-            pattern="[0-9]*"
+            type="tel"
           />
           <button type="submit">
             <p>Sign In</p>
