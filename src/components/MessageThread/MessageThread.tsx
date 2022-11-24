@@ -64,6 +64,40 @@ const MessageThread = ({chat}:any) => {
       nav(`/chat/${chat.id}`)
   }
 
+  const dateFormat = (date:Date) => {
+    const d = new Date(date); //date created
+    const now = new Date();
+
+    const dTime = d.getTime();
+    const nowTime = now.getTime();
+    const timeDiff = nowTime - dTime; // time elapsed since message creation
+
+    // conversion factors
+    const minute = 1000 * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30;
+    const year = week * 52;
+
+    //range in miliseconds
+    if (timeDiff < 86400*1000){
+      return lastMessage?.createdAt.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+    } 
+    else if (timeDiff > 86400*1000 &&  timeDiff < 604800*1000){
+      return `${Math.floor(timeDiff/day)}d`;
+    }
+    else if (timeDiff > 604800*1000 && timeDiff < 2628288*1000){
+      return `${Math.floor(timeDiff/week)}w`;
+    }
+    else if (timeDiff > 2628288*1000 && timeDiff < 31556926*1000){
+      return `${Math.floor(timeDiff/month)}m`;
+    }
+    else if (timeDiff > 31556926*1000){
+      return `${Math.floor(timeDiff/year)}y`;
+    }
+  }
+
   return (
     <div id={styles.mssg_thread} onClick={navigateToChat}>
         <div className={styles.avatar}>
@@ -80,7 +114,7 @@ const MessageThread = ({chat}:any) => {
         </div>
 
         <div className={styles.time}>
-          <p>{lastMessage?.createdAt.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</p>
+          <p>{dateFormat(lastMessage?.createdAt.toDate())}</p>
         </div>
     </div>
   )

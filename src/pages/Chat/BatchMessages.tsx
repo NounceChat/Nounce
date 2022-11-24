@@ -8,6 +8,7 @@ import { auth, db } from '../../firebase-config';
 import { doc, onSnapshot, getDocs, query, collection, where} from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from "react-router-dom";
+import ChatDate from '../../components/Bubbles/ChatDate';
 
 export type MyParams = {
     id: string;
@@ -65,13 +66,17 @@ function BatchMessages() {
                     messages && messages.length > 0 ? messages.map((message) => {
                         if (message.number === user?.phoneNumber) {
                             return (
-                                <div key={message.id} className={styles.bubbleContainer}>
-                                    <From message={message} />
+                                <div>
+                                    <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                    <div key={message.id} className={styles.bubbleContainer}>
+                                        <From message={message} />
+                                    </div>
                                 </div>
                             )
                         } else {
                             return (
                                 <div key={message.id} className={styles.bubbleContainer}>
+                                    <ChatDate chatDate={message?.createdAt.toDate()}/>
                                     <To message={message} />
                                 </div>
                             )

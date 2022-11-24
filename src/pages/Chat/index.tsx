@@ -16,6 +16,7 @@ import { CircularProgress } from '@mui/material';
 import * as geofire from 'geofire-common';
 import firebase from "firebase/compat/app"; 
 import 'firebase/compat/firestore';
+import ChatDate from '../../components/Bubbles/ChatDate';
 
 export type MyParams = {
     id: string;
@@ -34,6 +35,7 @@ function Chat() {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     const [chatMateNumber, setChatMateNumber] = useState('');
+    const [prevChat, setPrevChat] = useState(new Date());
     
     useEffect(() => {
         if (user === null) return;
@@ -144,21 +146,56 @@ function Chat() {
             {
                 !isWaiting ? 
                 <div id={styles.chatContainer}>
+                    {/* for every date that has a message, display chatDate */}
+                    {/* maybe map messages and add conditions if there is a message for that
+                    day, add the date, if not, no display */}
+                    
+                    {/* {
+                        messages && messages.length > 0 ? messages.map((message) => {
+                            if (message) {
+                                return (
+
+
+                                    <div key={message.id}>
+                                        <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                    </div>
+                                )
+                            }
+                        }) : <p></p>
+                    } */}
+
                     {
                         messages && messages.length > 0 ? messages.map((message) => {
                             if (message.number === user?.phoneNumber) {
                                 return (
-                                    <div key={message.id} className={styles.bubbleContainer}>
-                                        <From message={message} />
-                                    </div>
+                                    <>
+                                        {  ( (message?.createdAt.toDate().getTime() - prevChat.getTime()) > 86400*1000  ) ?
+                                            <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                            :
+                                            null
+                                        }
+
+                                        <div key={message.id} className={styles.bubbleContainer}>
+                                            <From message={message} />
+                                        </div>
+                                    </>
                                 )
                             } else {
                                 return (
-                                    <div key={message.id} className={styles.bubbleContainer}>
-                                        <To message={message} />
-                                    </div>
+                                    <>
+                                        {  ( (message?.createdAt.toDate().getTime() - prevChat.getTime()) > 86400*1000  ) ?
+                                            <ChatDate chatDate={message?.createdAt.toDate()}/>
+                                            :
+                                            null
+                                        }
+
+                                        <div key={message.id} className={styles.bubbleContainer}>
+                                            <To message={message} />
+                                        </div>
+                                    </>
                                 )
                             }
+                            setPrevChat(new Date(message?.createdAt.toDate()));
                         }) : <p className={styles.no_messages}>No messages</p>
                     }
                     <div ref={fieldRef}></div>
