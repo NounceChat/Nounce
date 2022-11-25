@@ -153,8 +153,7 @@ function Compose() {
     setIsLoading(true);
     setTimeout( () => {
       setShowMessage(true)
-      console.log("5 seconds has elapsed")
-    }, 5000)
+    }, 10000)
     setIsBatchMessage(false);
     const rtdb = getDatabase();
     await set(ref(rtdb, "matchmaking/" + user?.phoneNumber), {

@@ -187,11 +187,13 @@ function Chat() {
               if (previous && previous != undefined) {
                 prevChat = new Date(previous?.createdAt.toDate());
               }
+              console.log(prevChat);
               if (message.number === user?.phoneNumber) {
                 return (
                   <div key={message.id}>
-                    {prevChat.getTime() -
-                      message?.createdAt.toDate().getTime() >
+                    {Math.abs(
+                      prevChat.getTime() - message?.createdAt.toDate().getTime()
+                    ) >
                     86400 * 1000 ? (
                       <ChatDate chatDate={message?.createdAt.toDate()} />
                     ) : null}
