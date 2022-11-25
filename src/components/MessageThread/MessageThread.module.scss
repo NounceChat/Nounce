@@ -4,6 +4,12 @@
     justify-content: center;
     border-radius: 24px;
     padding: clamp(0rem, -0.2188rem + 1.25vw, 0.625rem);
+    height: 10vh;
+    min-height: 10px;
+
+    @media (max-height: 700px) and (orientation: landscape){
+        height: 10vw;
+    }
 
     &:hover {
         background-color: var(--color-group-4);
@@ -18,9 +24,9 @@
         border-radius: 50%;
 
         img {
-            width: 3.5em;
-            min-width: 3.5em;
-            min-height: 3.5em;
+            width: 3.2em;
+            min-width: 3.2em;
+            min-height: 3.2em;
             border-radius: 50%;
             background-color: #ffffff;
             border: 2px solid #8000ff;
@@ -32,7 +38,12 @@
         display: flex;
         flex-direction: column;
         justify-items: left;
+        justify-content: center;
         width: 50vw;
+
+        *{
+            margin: 0;
+        }
 
         .name {
             font-weight: 800;
@@ -55,10 +66,6 @@
             width: 25vw;
             justify-content: left;
             display: inline-block;
-
-            // Fix for ellipsis
-            // https://semicolon.dev/tutorial/css/text-overflow-ellipsis-doesnt-work
-            // https://youtu.be/2-odCIy0KOQ
         }
     }
 
@@ -67,6 +74,7 @@
         justify-content: flex-end;
         width: 40%;
         margin-right: 5%;
+        align-items: flex-start;
     }
 }
 

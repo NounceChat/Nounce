@@ -7,7 +7,10 @@
 
     .loading,
     .banned {
+        padding: 4.5em 0em 4em 0em;
+        overflow-y: scroll;
         height: 80vh;
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -17,6 +20,29 @@
         h1,
         h3 {
             text-align: center;
+        }
+        @media (orientation: landscape) {
+            h1{
+                margin-top: 5em;
+            }
+        }
+    }
+
+    #timerMessage{
+        margin-top: 5%;
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        align-content: center;
+        flex-direction: column;
+        *{
+            text-align: center;
+            font-weight: 400;
+        }
+        :nth-child(2){
+            font-weight: 500;
+            text-decoration: underline;
+            cursor: pointer;
         }
     }
 
@@ -166,6 +192,9 @@
         .loading,
         .banned {
             padding: 3vh 2vw 2vh 17vw;
+            h1{
+                margin-top: 0em;
+            }
         }
         .mssg_box {
             textarea {

@@ -38,6 +38,7 @@ function Compose() {
   const [isBanned, setIsBanned] = useState(false);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     if (user === null) return;
@@ -150,6 +151,10 @@ function Compose() {
     }
 
     setIsLoading(true);
+    setTimeout( () => {
+      setShowMessage(true)
+      console.log("5 seconds has elapsed")
+    }, 5000)
     setIsBatchMessage(false);
     const rtdb = getDatabase();
     await set(ref(rtdb, "matchmaking/" + user?.phoneNumber), {
@@ -215,6 +220,12 @@ function Compose() {
             <h1>Searching for a Chatmate...</h1>
           )}
           <CircularProgress color="secondary" />
+          { showMessage &&
+            <div id={styles.timerMessage}>
+              <h4>Matchmaking is taking a while.</h4>
+              <h4 onClick={ ()=> navigate('/')}>Go to Home while it's running in the background?</h4>
+            </div>
+          }
         </div>
       ) : (
         <>

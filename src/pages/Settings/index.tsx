@@ -169,6 +169,7 @@ function Settings() {
                 id="userName"
                 value={validateInput(usernameInfo)}
                 pattern="[a-zA-Z0-9_-]+"
+                maxLength={12}
                 onChange={(e) => {
                   setUsernameInfo(e.target.value);
                 }}
