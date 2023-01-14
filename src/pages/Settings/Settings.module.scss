@@ -151,11 +151,11 @@
             background-color: transparent;
             box-shadow: none;
         }
-        .save{
-            background: linear-gradient(180deg, #C000FE 0%, #8000FF 100%);
+        .save {
+            background: linear-gradient(180deg, #c000fe 0%, #8000ff 100%);
             color: #ffffff;
-            &:hover{
-                background: linear-gradient(180deg, #8000FF 0%, #C000FE 100%);
+            &:hover {
+                background: linear-gradient(180deg, #8000ff 0%, #c000fe 100%);
             }
         }
     }
@@ -175,7 +175,7 @@
         button {
             align-items: center;
             justify-content: center;
-    
+
             color: #ffffff;
             font-family: inherit;
             font-weight: 400;

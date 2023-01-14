@@ -4,7 +4,6 @@
     height: 100%;
     flex-direction: column;
     align-items: center;
-    
 
     #chatContainer {
         width: 100%;
@@ -96,7 +95,7 @@
             &:active,
             &:hover {
                 transition: all 0.4s;
-                scale: (0.90);
+                scale: (0.9);
             }
 
             svg {

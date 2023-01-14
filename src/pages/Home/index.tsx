@@ -1,5 +1,5 @@
 import "./Home.module.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase-config";
@@ -17,7 +17,7 @@ function Home() {
   return (
     <main>
       <Header />
-      <MessageList />
+        <MessageList />
       <Navbar />
     </main>
   );

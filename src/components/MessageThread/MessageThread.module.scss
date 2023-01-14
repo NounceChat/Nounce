@@ -7,7 +7,7 @@
     height: 10vh;
     min-height: 10px;
 
-    @media (max-height: 700px) and (orientation: landscape){
+    @media (max-height: 700px) and (orientation: landscape) {
         height: 10vw;
     }
 
@@ -41,7 +41,7 @@
         justify-content: center;
         width: 50vw;
 
-        *{
+        * {
             margin: 0;
         }
 

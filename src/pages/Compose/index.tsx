@@ -151,9 +151,9 @@ function Compose() {
     }
 
     setIsLoading(true);
-    setTimeout( () => {
-      setShowMessage(true)
-    }, 10000)
+    setTimeout(() => {
+      setShowMessage(true);
+    }, 10000);
     setIsBatchMessage(false);
     const rtdb = getDatabase();
     await set(ref(rtdb, "matchmaking/" + user?.phoneNumber), {
@@ -219,12 +219,14 @@ function Compose() {
             <h1>Searching for a Chatmate...</h1>
           )}
           <CircularProgress color="secondary" />
-          { showMessage &&
+          {showMessage && (
             <div id={styles.timerMessage}>
               <h4>Matchmaking is taking a while.</h4>
-              <h4 onClick={ ()=> navigate('/')}>Go to Home while it's running in the background?</h4>
+              <h4 onClick={() => navigate("/")}>
+                Go to Home while it's running in the background?
+              </h4>
             </div>
-          }
+          )}
         </div>
       ) : (
         <>
