@@ -22,24 +22,24 @@
             text-align: center;
         }
         @media (orientation: landscape) {
-            h1{
+            h1 {
                 margin-top: 5em;
             }
         }
     }
 
-    #timerMessage{
+    #timerMessage {
         margin-top: 5%;
         display: flex;
         justify-items: center;
         align-items: center;
         align-content: center;
         flex-direction: column;
-        *{
+        * {
             text-align: center;
             font-weight: 400;
         }
-        :nth-child(2){
+        :nth-child(2) {
             font-weight: 500;
             text-decoration: underline;
             cursor: pointer;
@@ -192,7 +192,7 @@
         .loading,
         .banned {
             padding: 3vh 2vw 2vh 17vw;
-            h1{
+            h1 {
                 margin-top: 0em;
             }
         }

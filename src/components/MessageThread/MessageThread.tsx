@@ -59,7 +59,7 @@ const MessageThread = ({ chat }: any) => {
         setUserName(name);
         setAvatar(`https://avatars.dicebear.com/api/initials/${name}.svg`);
       })
-      .catch((error) => {
+      .catch(() => {
         setUserName("Anonymous");
       });
   }, [user, chat, lastMessage]);
@@ -94,13 +94,13 @@ const MessageThread = ({ chat }: any) => {
           minute: "2-digit",
         });
     } else if (timeDiff > 86400 * 1000 && timeDiff < 604800 * 1000) {
-      return `${Math.floor(timeDiff / day)}d`;
+      return `${Math.floor(timeDiff / day)} d`;
     } else if (timeDiff > 604800 * 1000 && timeDiff < 2628288 * 1000) {
-      return `${Math.floor(timeDiff / week)}w`;
+      return `${Math.floor(timeDiff / week)} w`;
     } else if (timeDiff > 2628288 * 1000 && timeDiff < 31556926 * 1000) {
-      return `${Math.floor(timeDiff / month)}m`;
+      return `${Math.floor(timeDiff / month)} mo`;
     } else if (timeDiff > 31556926 * 1000) {
-      return `${Math.floor(timeDiff / year)}y`;
+      return `${Math.floor(timeDiff / year)} y`;
     }
   };
 
