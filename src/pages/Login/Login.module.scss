@@ -93,12 +93,14 @@ section {
         align-items: unset;
 
         .logoContainer {
+            position: relative;
             display: flex;
             align-items: center;
             img {
                 align-self: flex-start;
                 height: 4em;
                 width: 4em;
+                margin: 0;
             }
 
             h1 {
