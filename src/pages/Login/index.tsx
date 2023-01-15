@@ -126,8 +126,8 @@ function Login() {
         <br />
         When you want to. Around you.
       </p>
-      <h1>Welcome Back!</h1>
       <img src={LoginImg} alt="loginImg" className={styles.loginImg} />
+      <h1>Announce <span>your presence</span></h1>
       {expandForm === true ? (
         <form className={styles.OTPContainer} onSubmit={verifyOTP}>
           <input
