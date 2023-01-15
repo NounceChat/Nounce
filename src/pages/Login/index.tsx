@@ -1,6 +1,6 @@
 import styles from "./Login.module.scss";
 import logo from "../../assets/img/logo.png";
-import LoginImg from "../../assets/img/LogInDesk.svg";
+import LoginPhone from "../../components/LoginPhone";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase-config";
@@ -126,8 +126,10 @@ function Login() {
         <br />
         When you want to. Around you.
       </p>
-      <img src={LoginImg} alt="loginImg" className={styles.loginImg} />
+      
+      <LoginPhone/>
       <h1>Announce <span>your presence</span></h1>
+
       {expandForm === true ? (
         <form className={styles.OTPContainer} onSubmit={verifyOTP}>
           <input
