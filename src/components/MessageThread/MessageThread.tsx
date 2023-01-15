@@ -10,19 +10,17 @@ const MessageThread = ({ chat }: any) => {
   const [user] = useAuthState(auth);
   const [lastMessage, setLastMessage] = useState<any>(null);
   const [userName, setUserName] = useState<string>("Anonymous");
-  const [avatar, setAvatar] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("https://avatars.dicebear.com/api/initials/Anonymous.svg");
   useEffect(() => {
     setLastMessage(chat.messages[chat.messages.length - 1]);
     if (user === null || lastMessage === null) return;
-
-    setAvatar(`https://avatars.dicebear.com/api/initials/Anonymous.svg`);
 
     if (lastMessage?.number === user?.phoneNumber) {
       if (chat.isBatch) {
         setUserName("Announcement by You");
         setAvatar(`https://avatars.dicebear.com/api/identicon/${chat.id}.svg`);
       } else {
-        const other_user = chat.participants.filter(
+        const other_user:any = chat.participants.filter(
           (participant: string) => participant !== user?.phoneNumber
         )[0];
         if (other_user === undefined) return;
@@ -31,10 +29,13 @@ const MessageThread = ({ chat }: any) => {
           where("number", "==", other_user)
         );
         getDocs(other_userName).then((querySnapshot) => {
-          const other_userName_data = querySnapshot.docs[0].data().userName;
-          setAvatar(
-            `https://avatars.dicebear.com/api/initials/${other_userName_data}.svg`
-          );
+          const other_userName_data = querySnapshot.docs[0]?.data().userName;
+          if (other_userName_data !== undefined) 
+          {
+            setAvatar(
+              `https://avatars.dicebear.com/api/initials/${other_userName_data}.svg`
+            );
+          }
         });
         setUserName("You");
       }
