@@ -40,6 +40,9 @@ function Settings() {
   };
 
   const { toggleDarkMode } = useContext(ThemeContext);
+  useEffect(() => {
+    if (!user) navigate("/login");
+  }, [user]);
 
   useEffect(() => {
     //get phone with number of user
