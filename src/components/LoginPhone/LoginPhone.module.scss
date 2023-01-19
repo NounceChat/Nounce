@@ -1,12 +1,19 @@
 .loginImg {
     display: block;
     width: 100vw;
-    height: 20rem;
+    height: 45vh;
+}
+
+.phoneModel {
+    display: block;
+    position: absolute;
+    top: 10rem;
+    width: 100vw;
+    height: 45vh;
 }
 
 @media (min-width: 992px) {
-    .loginImg {
-        display: block;
+    .loginImg, .phoneModel {
         position: absolute;
         top: 5vh;
         right: 9vw;
