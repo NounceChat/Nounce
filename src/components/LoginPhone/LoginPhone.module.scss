@@ -1,13 +1,14 @@
 .loginImg {
     display: block;
-    width:  clamp(15rem, 40vw, 100rem);
+    width: 100vw;
+    height: 20rem;
 }
 
 @media (min-width: 992px) {
     .loginImg {
         display: block;
         position: absolute;
-        top: 16vh;
+        top: 5vh;
         right: 9vw;
         width: 40vw;
         height: 40vw;

@@ -28,13 +28,11 @@
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.0.3",
     "react-router-dom": "^6.4.2",
-    "styled-components": "^5.3.6",
     "three": "^0.148.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@types/styled-components": "^5.1.26",
     "@types/three": "^0.148.0",
     "@vitejs/plugin-react": "^2.1.0",
     "sass": "^1.55.0",

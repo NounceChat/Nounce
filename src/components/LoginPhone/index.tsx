@@ -1,31 +1,24 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, Suspense } from 'react';
 import styles from "./LoginPhone.module.scss";
-import styled from "styled-components";
 import LoginImg from "../../assets/img/LogInDesk.svg";
 import Box from "../../components/Three/Box";
+import AnimatedSphere from "../../components/Three/AnimatedSphere";
 import { Canvas } from "@react-three/fiber";
 
 interface LoginPhoneProps { }
-
-const Wrapper = styled.div`
-  position: relative;
-  background: transparent;
-
-  canvas {
-    height: clamp(15rem, 40vw, 100rem);
-    width: clamp(15rem, 40vw, 100rem);
-  }
-`;
-
  
 const LoginPhone: FunctionComponent<LoginPhoneProps> = () => {
     return ( 
-    <Wrapper>
+    <div className={styles.loginImg}>
       {/* <img src={LoginImg} alt="loginImg" className={styles.loginImg} /> */}
-      <Canvas className={styles.loginImg} >
-        <Box></Box>
+      <Canvas>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[-2, 5, 2]} />
+        <Suspense fallback={null}>
+          <AnimatedSphere></AnimatedSphere>
+        </Suspense>
       </Canvas>
-    </Wrapper>
+    </div>
    );
 }
  
