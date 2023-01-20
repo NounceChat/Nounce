@@ -5,14 +5,14 @@ import { getDatabase } from "firebase/database";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBYTzIuKbZYB14ZBIuYBS9a-o_QaGfrsqU",
-  authDomain: "gdg-project-nounce.firebaseapp.com",
-  projectId: "gdg-project-nounce",
-  storageBucket: "gdg-project-nounce.appspot.com",
-  messagingSenderId: "49649051845",
-  appId: "1:49649051845:web:6dbb6812118fac0342e8ac",
-  measurementId: "G-Z8CD9RJK6Q",
-  databaseURL: "https://gdg-project-nounce-default-rtdb.asia-southeast1.firebasedatabase.app/"
+  apiKey: "AIzaSyDHJTHevtL-6Yuetx8gmubAcYXYSuioxs0",
+  authDomain: "nounce-chat.firebaseapp.com",
+  projectId: "nounce-chat",
+  storageBucket: "nounce-chat.appspot.com",
+  messagingSenderId: "1073875027140",
+  appId: "1:1073875027140:web:10c565a79b1284c28d3591",
+  measurementId: "G-V062DQD87Y",
+  databaseURL: "https://nounce-chat-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
 // Initialize Firebase
