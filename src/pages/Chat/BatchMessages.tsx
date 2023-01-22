@@ -27,9 +27,14 @@ function BatchMessages() {
   const [messages, setMessages] = useState<any[]>([]);
   const [user] = useAuthState(auth);
   const { id } = useParams<keyof MyParams>() as MyParams;
-  const unsub = useEffect(() => {
-    if (user === null) return;
-    onSnapshot(doc(db, "announcements", id), (doc) => {
+  useEffect(() => {
+    let unsub: any;
+    if (user === null){
+      if (unsub !== undefined) unsub();
+      return
+    };
+
+    unsub = onSnapshot(doc(db, "announcements", id), (doc) => {
       if (doc.exists()) {
         setMessages((messages) => {
           const new_messages = messages.filter((message) => message.id !== id);

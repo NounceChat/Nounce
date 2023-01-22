@@ -41,20 +41,27 @@ function Compose() {
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
-    if (user === null) return;
+    let locationEventListner: any, phoneEventListner: any;
+    if (user === null) 
+    {
+      if (locationEventListner) locationEventListner();
+      if (phoneEventListner) phoneEventListner();
+      return;
+    }
+
     const q = query(
       collection(db, "phones"),
       where("number", "==", user?.phoneNumber)
     );
     const phone = user?.phoneNumber ? user?.phoneNumber : "";
     const location = doc(db, "locations", phone);
-    onSnapshot(location, (doc) => {
+    phoneEventListner = onSnapshot(location, (doc) => {
       if (doc.exists()) {
         setLatitude(doc.data().lat);
         setLongitude(doc.data().lng);
       }
     });
-    onSnapshot(q, (docSnap) => {
+    locationEventListner = onSnapshot(q, (docSnap) => {
       setIsBanned(docSnap.docs[0].data().isBanned);
     });
   }, [user]);

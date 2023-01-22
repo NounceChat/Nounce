@@ -86,26 +86,33 @@ function Chat() {
   const getLocation = async (phone: string) => {
     const location = doc(db, "locations", phone);
     return new Promise((resolve, reject) => {
-      const unsubscribe = onSnapshot(location, (snapshot) => {
-        const data = snapshot.data();
-        unsubscribe();
-        resolve(data);
+      getDoc(location).then((doc) => {
+        if (doc.exists()) {
+          resolve(doc.data());
+        } else {
+          reject("No such document!");
+        }
       });
     });
   };
 
   useEffect(() => {
-    if (user === null) return;
+    let phoneEventListener: any, chatsEventListener: any;
+    if (user === null) 
+    {
+      if (phoneEventListener) phoneEventListener();
+      if (chatsEventListener) chatsEventListener();
+      return;
+    }
+
     const phone = user?.phoneNumber ? user?.phoneNumber : "";
     const q = doc(db, "phones", phone);
 
-    onSnapshot(q, (docSnap) => {
-      if (docSnap.exists()) {
-        setIsBanned(docSnap.data().isBanned);
-      }
+    phoneEventListener = onSnapshot(q, (docSnap) => {
+      if (docSnap.exists()) setIsBanned(docSnap.data().isBanned);
     });
 
-    onSnapshot(doc(db, "chats", id), (snapshot) => {
+    chatsEventListener = onSnapshot(doc(db, "chats", id), (snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.data().participants.length === 1) {
           setIsWaiting(true);
@@ -169,10 +176,9 @@ function Chat() {
   };
 
   const sendOnEnter = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault;
-      sendChat(e);
-    }
+    if (e.key !== "Enter") return
+    e.preventDefault;
+    sendChat(e);
   };
 
   return (
