@@ -115,9 +115,7 @@ function Login() {
         <h1>Nounce</h1>
       </div>
       <div className={styles.intro_container}>
-        <h1 className={styles.intro_message}>
-          Announce your presence in your area
-        </h1>
+        <h1 className={styles.intro_message}>Announce <span>your presence</span></h1>
       </div>
       <p className={styles.description}>
         The Proximity-based chat app.

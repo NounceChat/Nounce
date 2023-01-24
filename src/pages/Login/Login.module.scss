@@ -111,7 +111,7 @@ section {
         h1 {
             display: none;
         }
-
+        
         .intro_container {
             display: flex;
             width: 30em;
@@ -126,12 +126,14 @@ section {
             width: 30em;
             font-size: 1.1em;
         }
-
+        
         .intro_message {
             display: flex;
-            font-size: 3em;
+            flex-direction: column;
+            font-size: 4rem;
             color: #bb01f3;
             line-height: 7vh;
+            z-index: 2;
         }
 
         form,
