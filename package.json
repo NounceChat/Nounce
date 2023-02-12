@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "test": "jest --watchAll --verbose --coverage",
     "preview": "vite preview"
   },
   "dependencies": {
