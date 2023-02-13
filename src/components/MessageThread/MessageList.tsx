@@ -3,7 +3,7 @@ import styles from "./MessageList.module.scss";
 import MessageThread from "./MessageThread";
 import { Chatcontext } from "./Chatcontext";
 import { useContext, useEffect} from "react";
-import { collection, query, where, onSnapshot, Timestamp } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase-config";
 import { CollectionReference } from "firebase/firestore";

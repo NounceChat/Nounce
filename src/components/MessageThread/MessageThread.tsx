@@ -9,9 +9,10 @@ import { ChatInterface, Message } from "../../components/Interface/index";
 
 const MessageThread = ({ chat }: {chat: ChatInterface}) => {
   const [user] = useAuthState(auth);
-  const [lastMessage, setLastMessage] = useState<Message>();
+  const [lastMessage, setLastMessage] = useState<Message|null>(null);
   const [userName, setUserName] = useState<string>("Anonymous");
   const [avatar, setAvatar] = useState<string>("https://avatars.dicebear.com/api/initials/Anonymous.svg");
+
   useEffect(() => {
     setLastMessage(chat.messages[chat.messages.length - 1]);
     if (user === null || lastMessage === null) return;
