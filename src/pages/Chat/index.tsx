@@ -14,7 +14,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../../components/Navbar/Navbar";
@@ -30,6 +30,7 @@ export type MyParams = {
 };
 
 function Chat() {
+  const navigate = useNavigate();
   const fieldRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [chatMate, setChatMate] = useState<string>("");
@@ -95,6 +96,10 @@ function Chat() {
       });
     });
   };
+
+  useEffect(()=>{
+    if (user === null) navigate('/login');
+  },[user]);
 
   useEffect(() => {
     let phoneEventListener: any, chatsEventListener: any;

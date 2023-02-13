@@ -44,6 +44,7 @@ function Compose() {
     let locationEventListner: any, phoneEventListner: any;
     if (user === null) 
     {
+      navigate("/login");
       if (locationEventListner) locationEventListner();
       if (phoneEventListner) phoneEventListner();
       return;

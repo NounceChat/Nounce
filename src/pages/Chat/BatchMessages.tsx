@@ -14,7 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatDate from "../../components/Bubbles/ChatDate";
 
 export type MyParams = {
@@ -22,11 +22,18 @@ export type MyParams = {
 };
 
 function BatchMessages() {
+  const navigate = useNavigate();
+
   const [chatMate, setChatMate] = useState<string>("");
   const fieldRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [user] = useAuthState(auth);
   const { id } = useParams<keyof MyParams>() as MyParams;
+
+  useEffect(()=>{
+    if (user === null) navigate('/login');
+  },[user]);
+
   useEffect(() => {
     let unsub: any;
     if (user === null){
