@@ -1,6 +1,7 @@
 import styles from "./Bubbles.module.scss";
+import { Message } from "../../components/Interface/index";
 
-function To({ message }: any) {
+function To({ message : message }: { message: Message }) {
   return (
     <div id={styles.toBubble} className={styles.bubble}>
       <p className={styles.time}>

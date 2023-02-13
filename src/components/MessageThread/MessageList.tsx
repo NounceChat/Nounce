@@ -1,8 +1,9 @@
+import { ChatInterface } from './../Interface/index';
 import styles from "./MessageList.module.scss";
 import MessageThread from "./MessageThread";
 import { Chatcontext } from "./Chatcontext";
 import { useContext, useEffect} from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, Timestamp } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase-config";
 import { CollectionReference } from "firebase/firestore";
@@ -11,12 +12,12 @@ const MessageList = () => {
   const [user] = useAuthState(auth);
   const { chats, setChats } = useContext<any>(Chatcontext);
 
-  const sortChats = (chats: any[]) => {
+  const sortChats = (chats: ChatInterface[]) => {
     return chats.sort((a, b) => {
       if (a.messages.length == 0 || b.messages.length == 0) return 0;
 
-      const a_timestamp = a.messages[a.messages.length - 1].createdAt;
-      const b_timestamp = b.messages[b.messages.length - 1].createdAt;
+      const a_timestamp: number = Number(a.messages[a.messages.length - 1].createdAt);
+      const b_timestamp: number = Number(b.messages[b.messages.length - 1].createdAt);
       return b_timestamp - a_timestamp;
     });
   };
@@ -29,10 +30,15 @@ const MessageList = () => {
     );
   
     return onSnapshot(q, (querySnapshot) => {
-      const chats: any[] = [];
+      const chats: ChatInterface[] = [];
       querySnapshot.forEach((doc) => {
-        if (doc.data().messages.length > 0)
-          chats.push({ ...doc.data(), id: doc.id, isBatch: false });
+        if (doc.data() && doc.data().messages.length > 0)
+          chats.push({ 
+            id: doc.id, 
+            isBatch: false,
+            messages: doc.data().messages,
+            participants: doc.data().participants
+          });
       });
       setChats(sortChats(chats));
     });
@@ -59,7 +65,7 @@ const MessageList = () => {
           isBatch: true,
           participants: [user?.phoneNumber, doc.data().sender],
         };
-        setChats((chats: any[]) => {
+        setChats((chats: ChatInterface[]) => {
           const new_chats = chats.filter((chat) => chat.id !== new_chat.id);
           new_chats.unshift(new_chat);
           sortChats(new_chats);
@@ -92,9 +98,9 @@ const MessageList = () => {
           participants: [user?.phoneNumber, doc.data().sender],
         };
 
-        setChats((chats: any) => {
+        setChats((chats: ChatInterface[]) => {
           const new_chats = chats.filter(
-            (chat: any) => chat.id !== new_chat.id
+            (chat: ChatInterface) => chat.id !== new_chat.id
           );
           new_chats.unshift(new_chat);
           sortChats(new_chats);
@@ -105,26 +111,20 @@ const MessageList = () => {
   };
 
   useEffect(() => {
-    let chatsEventListener: any, batch_messages_listener: any, batch_messages_received_listener: any;
-
-    if (user === null){
-      if (chatsEventListener) chatsEventListener();
-      if (batch_messages_listener) batch_messages_listener();
-      if (batch_messages_received_listener) batch_messages_received_listener();
+    if (user === null)
       return;
-    };
 
     // querySnapshots for getting chats
-    chatsEventListener = ChatsEventListener();        
+    const chatsEventListener = ChatsEventListener();        
     const batch_messages_ref = collection(db, "announcements");
-    batch_messages_listener = BatchMessagesEventListener(batch_messages_ref);
-    batch_messages_received_listener = BatchMessagesReceivedEventListener(batch_messages_ref);
+    const batch_messages_listener = BatchMessagesEventListener(batch_messages_ref);
+    const batch_messages_received_listener = BatchMessagesReceivedEventListener(batch_messages_ref);
   }, [user]);
 
   return (
     <div id={styles.mssg_list}>
       {chats.length > 0 ? (
-        chats.map((message:any) => {
+        chats.map((message: ChatInterface) => {
           return <MessageThread key={message.id} chat={message} />;
         })
       ) : (

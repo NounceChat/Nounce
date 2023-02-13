@@ -1,6 +1,7 @@
+import { ChatDateProps } from './../Interface/index';
 import styles from "./ChatDate.module.scss";
 
-const ChatDate = ({ chatDate }: any) => {
+const ChatDate = ({ chatDate }: ChatDateProps) => {
   const dateFormat = () => {
     const d = new Date(chatDate);
     const now = new Date();

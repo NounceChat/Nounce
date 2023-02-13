@@ -2,7 +2,7 @@ import "./Header.module.scss";
 import logo from "../../assets/img/logo.png";
 
 const Header = () => {
-  var headerName: any =
+  let headerName: string =
     location.pathname == "/" || location.pathname == "/announcement"
       ? "Home"
       : location.pathname == "/compose"

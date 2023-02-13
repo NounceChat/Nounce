@@ -1,3 +1,4 @@
+import { UserInfo } from '../../components/Interface/index';
 import { useState, useEffect, useContext } from "react";
 
 import styles from "./Settings.module.scss";
@@ -18,18 +19,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Switch from "@mui/material/Switch";
 import { FormControlLabel } from "@mui/material";
 import { ThemeContext } from "../../components/darkMode/Theme";
-
-interface UserInfo {
-  id: string;
-  userName: string;
-  email: string;
-  number: string;
-  isOptedIn: boolean;
-  isDarkMode: boolean;
-  isBanned: boolean;
-  createdAt: Date;
-  profanityStrike: number;
-};
 
 function Settings() {
   const [user] = useAuthState(auth);
