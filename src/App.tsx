@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Compose from "./pages/Compose";
@@ -62,6 +62,7 @@ function App() {
                 <Route path="/settings" element={<Settings />}></Route>
                 <Route path="/chat/:id" element={<Chat />}></Route>
                 <Route path="/announcement/:id" element={<BatchMessages />}></Route>
+                <Route path="*" element={<Navigate to="/" />}></Route>
               </Routes>
             </div>
           </Router>
