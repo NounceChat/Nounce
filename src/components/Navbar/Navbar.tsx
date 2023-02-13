@@ -1,3 +1,4 @@
+import { IconColors } from './../Interface/index';
 import styles from "./Navbar.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import Logo from "../../assets/img/logo.png";
 import { ThemeContext } from "../darkMode/Theme";
+
 const Navbar = () => {
   const { IsDarkMode } = useContext(ThemeContext);
 
@@ -16,7 +18,7 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  var iconColors: any = {
+  let iconColors: IconColors = {
     homeColor:
       location.pathname == "/" || location.pathname.includes("/announcement")
         ? UseColor

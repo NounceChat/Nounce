@@ -3,7 +3,7 @@ import From from "../../components/Bubbles/From";
 import To from "../../components/Bubbles/To";
 import ChatHeader from "../../components/ChatHeader";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, FormEvent } from "react";
 import { auth, db } from "../../firebase-config";
 import {
   doc,
@@ -24,6 +24,7 @@ import * as geofire from "geofire-common";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import ChatDate from "../../components/Bubbles/ChatDate";
+import { Message, Location } from "../../components/Interface";
 
 export type MyParams = {
   id: string;
@@ -32,9 +33,9 @@ export type MyParams = {
 function Chat() {
   const navigate = useNavigate();
   const fieldRef = useRef<HTMLInputElement>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [chatMate, setChatMate] = useState<string>("");
-  const [chat, setChat] = useState<any>("");
+  const [chat, setChat] = useState<string>("");
   const [user] = useAuthState(auth);
   const { id } = useParams<keyof MyParams>() as MyParams;
   const [isBanned, setIsBanned] = useState(false);
@@ -42,8 +43,8 @@ function Chat() {
   const [isBlocked, setIsBlocked] = useState(false);
 
   const getNearbyPhones = (
-    latitude: any,
-    longitude: any
+    latitude: number,
+    longitude: number,
   ): Promise<string[]> => {
     // query location within a mile radius of user
     return new Promise((resolve, reject) => {
@@ -56,7 +57,7 @@ function Chat() {
       const promises = [];
       const db = firebase.firestore();
       for (const b of bounds) {
-        const q: any = db
+        const q: firebase.firestore.Query = db
           .collection("locations")
           .orderBy("geohash")
           .startAt(b[0])
@@ -66,7 +67,7 @@ function Chat() {
       }
       Promise.all(promises).then((snapshots) => {
         for (const snap of snapshots) {
-          for (const doc of snap.docs as Array<any>) {
+          for (const doc of snap.docs as Array<firebase.firestore.DocumentData>) {
             const lat = doc.get("lat");
             const lng = doc.get("lng");
             const distanceInKm = geofire.distanceBetween(
@@ -84,12 +85,12 @@ function Chat() {
     });
   };
 
-  const getLocation = async (phone: string) => {
+  const getLocation = async (phone: string) : Promise<Location> => {
     const location = doc(db, "locations", phone);
     return new Promise((resolve, reject) => {
       getDoc(location).then((doc) => {
         if (doc.exists()) {
-          resolve(doc.data());
+          resolve(doc.data() as Location);
         } else {
           reject("No such document!");
         }
@@ -102,22 +103,16 @@ function Chat() {
   },[user]);
 
   useEffect(() => {
-    let phoneEventListener: any, chatsEventListener: any;
-    if (user === null) 
-    {
-      if (phoneEventListener) phoneEventListener();
-      if (chatsEventListener) chatsEventListener();
-      return;
-    }
+    if (user === null) return;
 
     const phone = user?.phoneNumber ? user?.phoneNumber : "";
     const q = doc(db, "phones", phone);
 
-    phoneEventListener = onSnapshot(q, (docSnap) => {
+    onSnapshot(q, (docSnap) => {
       if (docSnap.exists()) setIsBanned(docSnap.data().isBanned);
     });
 
-    chatsEventListener = onSnapshot(doc(db, "chats", id), (snapshot) => {
+    onSnapshot(doc(db, "chats", id), (snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.data().participants.length === 1) {
           setIsWaiting(true);
@@ -142,7 +137,7 @@ function Chat() {
           });
 
         getLocation(phone)
-          .then((location: any) => {
+          .then((location: Location) => {
             return { lat: location.lat, lng: location.lng };
           })
           .then((data) => {
@@ -166,7 +161,7 @@ function Chat() {
     fieldRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendChat = async (e: any) => {
+  const sendChat = async (e: FormEvent) => {
     e.preventDefault();
     if (user === null || chat.length === 0) return;
     updateDoc(doc(db, "chats", id), {

@@ -8,10 +8,8 @@ export const ThemeContext = React.createContext({
   toggleDarkMode: () => {},
 });
 
-export default function ThemeProvider({ children }: any) {
+export default function ThemeProvider({ children }: { children: JSX.Element }) {
   // keeps state of the current theme
-  //   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
   const [IsDarkMode, setIsDarkMode] = useState(true);
   const [user] = useAuthState(auth);
 

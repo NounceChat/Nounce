@@ -1,3 +1,4 @@
+import { UserInfo } from '../../components/Interface/index';
 import { useState, useEffect, useContext } from "react";
 
 import styles from "./Settings.module.scss";
@@ -27,7 +28,7 @@ function Settings() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isOptedIn, setIsOptedIn] = useState(true);
   const [numberInfo, setNumber] = useState("");
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
   const [switchDisabled, setSwitchDisabled] = useState(true);
   const [avatar, setAvatar] = useState<string>("");
 
@@ -57,7 +58,17 @@ function Settings() {
         navigate("/login");
       }
       const phone = querySnapshot.docs[0];
-      setUserInfo({ id: phone.id, ...phone.data() });
+      setUserInfo({
+        id: phone.id,
+        userName: phone.data().userName,
+        email: phone.data().email,
+        number: phone.data().number,
+        isOptedIn: phone.data().isOptedIn,
+        isDarkMode: phone.data().isDarkMode,
+        isBanned: phone.data().isBanned,
+        createdAt: phone.data().createdAt,
+        profanityStrike: phone.data().profanityStrike,
+      });
       setUsernameInfo(phone.data().userName);
       setEmailInfo(phone.data().email);
       setNumber(phone.data().number);
@@ -75,6 +86,7 @@ function Settings() {
   };
 
   const revertBack = () => {
+    if (userInfo === null || userInfo === undefined) return;
     setUsernameInfo(userInfo.userName);
     setEmailInfo(userInfo.email);
     setNumber(userInfo.number);
@@ -82,7 +94,7 @@ function Settings() {
 
   const saveChanges = () => {
     const myForm = document.getElementById("myForm") as HTMLFormElement;
-    if (!myForm.checkValidity()) return;
+    if (!myForm.checkValidity() || !userInfo) return;
     updateDoc(doc(db, "phones", userInfo.id), {
       userName: usernameInfo,
       email: emailInfo,
@@ -96,12 +108,13 @@ function Settings() {
     allowEdit();
   };
 
-  const validateInput = (input: any) => {
+  const validateInput = (input: string) => {
     if (input == null) return "";
     return input;
   };
 
   const darkModeHandler = () => {
+    if (switchDisabled || !userInfo) return;
     setSwitchDisabled(true);
     setIsDarkMode(!isDarkMode);
     toggleDarkMode();
@@ -118,6 +131,7 @@ function Settings() {
   };
 
   const optInHandler = () => {
+    if (switchDisabled || !userInfo) return;
     setSwitchDisabled(true);
     setIsOptedIn(!isOptedIn);
     updateDoc(doc(db, "phones", userInfo.id), {
@@ -152,7 +166,7 @@ function Settings() {
         </div>
 
         <div className={styles.setting_name}>
-          <h3>{validateInput(userInfo?.userName)}</h3>
+          <h3>{userInfo ? validateInput(userInfo.userName) : ""}</h3>
         </div>
 
         <div className={styles.userInfo}>

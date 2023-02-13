@@ -5,12 +5,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase-config";
 import { query, where, collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config";
+import { ChatInterface, Message } from "../../components/Interface/index";
 
-const MessageThread = ({ chat }: any) => {
+const MessageThread = ({ chat }: {chat: ChatInterface}) => {
   const [user] = useAuthState(auth);
-  const [lastMessage, setLastMessage] = useState<any>(null);
+  const [lastMessage, setLastMessage] = useState<Message|null>(null);
   const [userName, setUserName] = useState<string>("Anonymous");
   const [avatar, setAvatar] = useState<string>("https://avatars.dicebear.com/api/initials/Anonymous.svg");
+
   useEffect(() => {
     setLastMessage(chat.messages[chat.messages.length - 1]);
     if (user === null || lastMessage === null) return;
@@ -20,7 +22,7 @@ const MessageThread = ({ chat }: any) => {
         setUserName("Announcement by You");
         setAvatar(`https://avatars.dicebear.com/api/identicon/${chat.id}.svg`);
       } else {
-        const other_user:any = chat.participants.filter(
+        const other_user: string= chat.participants.filter(
           (participant: string) => participant !== user?.phoneNumber
         )[0];
         if (other_user === undefined) return;
@@ -121,7 +123,13 @@ const MessageThread = ({ chat }: any) => {
       </div>
 
       <div className={styles.time}>
-        <p>{dateFormat(lastMessage?.createdAt.toDate())}</p>
+        <p>
+          {
+            lastMessage ?
+            dateFormat(lastMessage.createdAt.toDate())
+            : ""
+          }
+        </p>
       </div>
     </div>
   );

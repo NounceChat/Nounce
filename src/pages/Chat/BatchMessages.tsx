@@ -16,17 +16,19 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import ChatDate from "../../components/Bubbles/ChatDate";
+import { Message } from "../../components/Interface/index";
 
 export type MyParams = {
   id: string;
 };
+
 
 function BatchMessages() {
   const navigate = useNavigate();
 
   const [chatMate, setChatMate] = useState<string>("");
   const fieldRef = useRef<HTMLInputElement>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [user] = useAuthState(auth);
   const { id } = useParams<keyof MyParams>() as MyParams;
 
@@ -35,13 +37,9 @@ function BatchMessages() {
   },[user]);
 
   useEffect(() => {
-    let unsub: any;
-    if (user === null){
-      if (unsub !== undefined) unsub();
-      return
-    };
+    if (user === null) return
 
-    unsub = onSnapshot(doc(db, "announcements", id), (doc) => {
+    onSnapshot(doc(db, "announcements", id), (doc) => {
       if (doc.exists()) {
         setMessages((messages) => {
           const new_messages = messages.filter((message) => message.id !== id);
