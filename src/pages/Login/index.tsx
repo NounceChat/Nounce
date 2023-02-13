@@ -12,13 +12,20 @@ import {
   query,
   doc,
 } from "firebase/firestore";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult,
+  UserCredential,
+} from "firebase/auth";
+import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FormEvent, ChangeEvent } from "react";
 
 declare global {
   interface Window {
-    recaptchaVerifier: any;
-    confirmationResult: any;
+    recaptchaVerifier: RecaptchaVerifier;
+    confirmationResult: ConfirmationResult;
   }
 }
 
@@ -40,34 +47,36 @@ function Login() {
     if (user) navigate("/");
   }, [user]);
 
-  const verifyOTP = (e: any) => {
+  const verifyOTP = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (OTP.length === 6) {
       window.confirmationResult
         .confirm(OTP)
-        .then((result: any) => {
+        .then((result: UserCredential) => {
           const myPhone = query(
             collection(db, "phones"),
             where("number", "==", e164(phoneNumber))
           );
-          getDocs(myPhone).then((querySnapshot: any) => {
-            if (querySnapshot.empty) {
-              const validatedNumber = e164(phoneNumber);
-              setDoc(doc(db, "phones", validatedNumber), {
-                number: validatedNumber,
-                isBanned: false,
-                isOptedIn: true,
-                isDarkMode: true,
-                userName: "Anonymous",
-                email: "",
-                createdAt: new Date(),
-                profanityStrike: 5,
-              });
+          getDocs(myPhone).then(
+            (querySnapshot: QuerySnapshot<DocumentData>) => {
+              if (querySnapshot.empty) {
+                const validatedNumber = e164(phoneNumber);
+                setDoc(doc(db, "phones", validatedNumber), {
+                  number: validatedNumber,
+                  isBanned: false,
+                  isOptedIn: true,
+                  isDarkMode: true,
+                  userName: "Anonymous",
+                  email: "",
+                  createdAt: new Date(),
+                  profanityStrike: 5,
+                });
+              }
             }
-          });
+          );
           console.log(result.user);
         })
-        .catch((error: any) => {
+        .catch((error: unknown) => {
           console.log(error);
           alert("Invalid OTP");
         });
@@ -79,13 +88,13 @@ function Login() {
       "auth-container",
       {
         size: "invisible",
-        callback: (response: any) => {},
+        callback: null,
       },
       auth
     );
   };
 
-  const requestOTP = (e: any) => {
+  const requestOTP = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const convertedNumber = e164(phoneNumber);
     if (
@@ -115,7 +124,9 @@ function Login() {
         <h1>Nounce</h1>
       </div>
       <div className={styles.intro_container}>
-        <h1 className={styles.intro_message}>Announce <span>your presence</span></h1>
+        <h1 className={styles.intro_message}>
+          Announce <span>your presence</span>
+        </h1>
       </div>
       <p className={styles.description}>
         The Proximity-based chat app.
@@ -124,9 +135,11 @@ function Login() {
         <br />
         When you want to. Around you.
       </p>
-      
-      <LoginPhone/>
-      <h1>Announce <span>your presence</span></h1>
+
+      <LoginPhone />
+      <h1>
+        Announce <span>your presence</span>
+      </h1>
 
       {expandForm === true ? (
         <form className={styles.OTPContainer} onSubmit={verifyOTP}>
@@ -148,7 +161,9 @@ function Login() {
       ) : (
         <form onSubmit={requestOTP}>
           <input
-            onChange={(e: any) => setPhoneNumber(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setPhoneNumber(e.target.value)
+            }
             placeholder="Phone Number"
             type="tel"
           />

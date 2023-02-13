@@ -21,6 +21,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 import Alert from "@mui/material/Alert";
+import { DocumentSnapshot, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { ChangeEvent } from "react";
 
 import * as geofire from "geofire-common";
 import firebase from "firebase/compat/app";
@@ -40,13 +42,13 @@ function Compose() {
   const [longitude, setLongitude] = useState(0);
   const [showMessage, setShowMessage] = useState(false);
 
+  type OnSnapshotUnsubscribe = (snapshot: DocumentSnapshot<DocumentData>) => void
+
   useEffect(() => {
-    let locationEventListner: any, phoneEventListner: any;
+    let locationEventListner:OnSnapshotUnsubscribe, phoneEventListner: OnSnapshotUnsubscribe;
     if (user === null) 
     {
       navigate("/login");
-      if (locationEventListner) locationEventListner();
-      if (phoneEventListner) phoneEventListner();
       return;
     }
 
@@ -94,7 +96,8 @@ function Compose() {
       const promises = [];
       const db = firebase.firestore();
       for (const b of bounds) {
-        const q: any = db
+        const q: firebase.firestore.Query<firebase.firestore.DocumentData> = 
+          db
           .collection("locations")
           .orderBy("geohash")
           .startAt(b[0])
@@ -104,7 +107,7 @@ function Compose() {
       }
       Promise.all(promises).then(async (snapshots) => {
         for (const snap of snapshots) {
-          for (const doc of snap.docs as Array<any>) {
+          for (const doc of snap.docs as Array<QueryDocumentSnapshot>) {
             const lat = doc.get("lat");
             const lng = doc.get("lng");
             const distanceInKm = geofire.distanceBetween(
@@ -194,7 +197,7 @@ function Compose() {
     );
   };
 
-  const inputChange = (e: any) => {
+  const inputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     if (e.target.value.length > maxChar || e.target.value.length === 0) {
       setBtnDisabled(true);
